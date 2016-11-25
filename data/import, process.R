@@ -19,7 +19,19 @@ ftt <- ft %>% gather(var, val, share_coal:chg_windsolar) %>%
   spread(metric, val)
 ftt$fuel_type <- factor(ftt$fuel, levels=c("coal", "natgas", "nuclear", "hydro", "windsolar", "other"),
                         labels=c("Coal", "Natural gas", "Nuclear", "Hydroelectric", "Wind and solar", "Other"))
-table(ftt$fuel,ftt$fuel_type)
+
+#computer other residual
+residual <- function(g){
+  new_row <- g[1, ]
+  new_row$fuel <- "other"
+  new_row$fuel_type <- "Other"
+  new_row$chg <- NA
+  new_row$share <- 1-sum(g$share)
+  return(rbind(g, new_row))
+}
+ftf <- ftt %>% group_by(stabbr) %>% do(residual(.))
+
+table(ftf$fuel,ftf$fuel_type)
 
 #emissions and gdp
 eg <- read.csv("/home/alec/Projects/Brookings/energy-decoupling/data/emissions_and_gdp.csv", stringsAsFactors=FALSE)
@@ -62,7 +74,7 @@ st <- split(tidy[c("state", "stfips", "stabbr", "year", "CO2", "GDP")], tidy$sta
 l <- lapply(st, fn)
 
 #final fuel type list -- not the result is ordered
-l2 <- lapply(split(ftt, ftt$stabbr), function(e){
+l2 <- lapply(split(ftf, ftf$stabbr), function(e){
   ee <- e[order(e$fuel_type), ]
   cat("Sum of data frame shares in ")
   cat(ee[1,"state"])
@@ -85,15 +97,8 @@ gg <- ggplot(gg_data, aes(x=year))
 gg + geom_line(aes(y=GDPi), color = "#008837") + geom_line(aes(y=CO2i, color=ifelse(CO2i<100, 1, 0))) +
     facet_wrap(~state)
 
-#left off here
-residual <- function(g){
-  new_row <- g[1, ]
-  new_row$fuel <- "other"
-  new_row$chg <- NA
-  new_row$share
-}
-ft_data <- ftt %>% group_by(state) %>% do()
-gg2 <- ggplot(ftt, aes(x=fuel_type)) + geom_bar(aes(y=share, color=fuel_type), stat="identity")
+
+gg2 <- ggplot(ftf, aes(x=fuel_type)) + geom_bar(aes(y=share, color=fuel_type), stat="identity")
 gg2 + facet_wrap(~state)
 
 
