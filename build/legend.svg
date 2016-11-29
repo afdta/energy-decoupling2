@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="legend.svg"
+   width="306"
+   height="275"
+   inkscape:export-filename="/home/alec/Projects/Brookings/energy-decoupling/build/legend.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <metadata
+     id="metadata170">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs168" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1714"
+     inkscape:window-height="857"
+     id="namedview166"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     showguides="false"
+     inkscape:zoom="1.03"
+     inkscape:cx="244.60118"
+     inkscape:cy="142.95937"
+     inkscape:window-x="72"
+     inkscape:window-y="43"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <rect
+     id="rect8"
+     width="0"
+     height="0"
+     x="3.7377625"
+     y="257.88135" />
+  <text
+     id="text52"
+     x="8.7377625"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <text
+     id="text62"
+     x="24.003763"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <text
+     id="text72"
+     x="125.05177"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <text
+     id="text82"
+     x="156.56976"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <text
+     id="text92"
+     x="161.49976"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <text
+     id="text102"
+     x="164.40677"
+     y="292.88135"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.25px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans'" />
+  <path
+     style="font-size:medium;font-family:sans-serif;text-anchor:end;visibility:hidden;fill:none;stroke:none"
+     inkscape:connector-curvature="0"
+     id="path134"
+     d="m 18.737762,418.38136 0.5,0 0,-135 -0.5,0"
+     class="domain" />
+  <rect
+     style="fill:#e41a1c"
+     id="rect48"
+     y="54"
+     x="3.2702637e-08"
+     width="51"
+     height="7" />
+  <rect
+     style="fill:#ff7f00"
+     id="rect58"
+     y="54"
+     x="51"
+     width="51"
+     height="7" />
+  <rect
+     style="fill:#4daf4a"
+     id="rect68"
+     y="54"
+     x="102"
+     width="51"
+     height="7" />
+  <rect
+     style="fill:#377eb8"
+     id="rect78"
+     y="54"
+     x="153"
+     width="51"
+     height="7" />
+  <rect
+     style="fill:#ffff33"
+     id="rect88"
+     y="54"
+     x="204"
+     width="51"
+     height="7" />
+  <rect
+     style="fill:#666666"
+     id="rect98"
+     y="54"
+     x="255"
+     width="51"
+     height="7" />
+  <text
+     xml:space="preserve"
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Italic';letter-spacing:0px;word-spacing:0px;fill:#111111;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="0.57519531"
+     y="46.745758"
+     id="text3674"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3676"
+       x="0.57519531"
+       y="46.745758">Share of energy production by fuel type, 2014</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="11.461304"
+     y="77.021347"
+     id="text3692"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3694"
+       x="11.461304"
+       y="77.021347">Coal</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="54.794067"
+     y="76.658798"
+     id="text3692-9"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3694-2"
+       x="54.794067"
+       y="76.658798">N. Gas</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="103.34351"
+     y="77.021347"
+     id="text3692-9-6"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3694-2-6"
+       x="103.34351"
+       y="77.021347">Nuclear</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="159.87238"
+     y="77.021347"
+     id="text3692-9-6-4"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3694-2-6-9"
+       x="159.87238"
+       y="77.021347">Hydro</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:100%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="211.88953"
+     y="77.021347"
+     id="text3692-9-6-4-5"
+     sodipodi:linespacing="100%"><tspan
+       sodipodi:role="line"
+       id="tspan3694-2-6-9-0"
+       x="211.88953"
+       y="77.021347">Wind/</tspan><tspan
+       sodipodi:role="line"
+       x="211.88953"
+       y="90.771347"
+       id="tspan3794">solar</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="263.0943"
+     y="77.021347"
+     id="text3692-9-6-4-5-4"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3694-2-6-9-0-8"
+       x="263.0943"
+       y="77.021347">Other</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Italic';letter-spacing:0px;word-spacing:0px;fill:#111111;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="0.53857422"
+     y="124.40968"
+     id="text3674-7"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3676-1"
+       x="0.53857422"
+       y="124.40968">Real GDP and emissions, 2000 to 2014</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';letter-spacing:0px;word-spacing:0px;fill:#666666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="0.37133789"
+     y="142.06177"
+     id="text3674-7-7"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3676-1-2"
+       x="0.37133789"
+       y="142.06177">2000 = 100</tspan></text>
+  <path
+     style="fill:none;stroke:#222222;stroke-width:2px;stroke-dasharray:none"
+     inkscape:connector-curvature="0"
+     id="path26-6"
+     d="m 50.513826,211.38802 16.428571,-3.36698 16.428572,-7.09986 16.428567,-2.53656 16.428584,-4.28904 16.42857,-5.6455 16.42857,-1.91945 16.42857,-5.39539 16.42857,-4.94155 16.42857,0.24908 16.42857,-2.7756 16.42858,-3.62287 16.42857,-0.41428 16.42857,-5.88154 16.42857,-0.93158"
+     sodipodi:nodetypes="ccccccccccccccc" />
+  <path
+     style="fill:none;stroke:#222222;stroke-width:2px;stroke-dasharray:3, 3"
+     inkscape:connector-curvature="0"
+     id="path28-1"
+     d="m 50.513826,211.38802 16.428571,-0.54574 16.428572,0.21828 16.428567,-2.94713 16.428584,-1.09148 16.42857,-1.96476 16.42857,7.20403 16.42857,-0.1091 16.42857,4.25689 16.42857,3.82041 16.42857,1.63722 16.42858,5.13025 16.42857,5.02099 16.42857,0.54573 16.42857,-4.5419" />
+  <circle
+     r="3"
+     cx="280.51382"
+     cy="162.81689"
+     id="circle32-5"
+     style="fill:#222222" />
+  <text
+     x="186.82687"
+     y="160.94287"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#666666;fill-opacity:1"
+     id="text34-9">Real GDP</text>
+  <circle
+     r="3"
+     cx="280.51382"
+     cy="228.02171"
+     id="circle38-4"
+     style="fill:#222222" />
+  <text
+     x="154.92065"
+     y="240.64307"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#666666;fill-opacity:1"
+     id="text40-9">Emissions</text>
+  <path
+     style="font-size:medium;font-family:sans-serif;text-anchor:middle;visibility:hidden;fill:none;stroke:none"
+     inkscape:connector-curvature="0"
+     id="path106"
+     d="m 51.013826,254.13802 0,0.5 230.000004,0 0,-0.5"
+     class="domain" />
+  <line
+     y2="257.138"
+     x1="51.013824"
+     x2="51.013824"
+     style="font-size:medium;font-family:sans-serif;text-anchor:middle;visibility:hidden;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line110"
+     y1="254.13802" />
+  <text
+     y="270.138"
+     x="51.013824"
+     id="text112-0"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:middle;visibility:hidden;fill:#666666">2000</text>
+  <line
+     y2="257.138"
+     x1="133.15669"
+     x2="133.15669"
+     style="font-size:medium;font-family:sans-serif;text-anchor:middle;visibility:hidden;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line116"
+     y1="254.13802" />
+  <text
+     y="270.138"
+     x="133.15669"
+     id="text118-9"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:middle;visibility:hidden;fill:#666666">'05</text>
+  <line
+     y2="257.138"
+     x1="215.29953"
+     x2="215.29953"
+     style="font-size:medium;font-family:sans-serif;text-anchor:middle;visibility:hidden;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line122"
+     y1="254.13802" />
+  <text
+     y="270.138"
+     x="215.29953"
+     id="text124-1"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:middle;visibility:hidden;fill:#666666">'10</text>
+  <line
+     y2="257.138"
+     x1="281.01382"
+     x2="281.01382"
+     style="font-size:medium;font-family:sans-serif;text-anchor:middle;visibility:hidden;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line128"
+     y1="254.13802" />
+  <text
+     y="270.138"
+     x="281.01382"
+     id="text130-7"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:middle;visibility:hidden;fill:#666666">'14</text>
+  <line
+     x2="33.513824"
+     y1="232.98177"
+     y2="232.98177"
+     style="font-size:medium;font-family:sans-serif;text-anchor:end;visibility:visible;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line138"
+     x1="36.513824" />
+  <text
+     x="24.513826"
+     y="236.98177"
+     id="text140-7"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:end;visibility:visible;fill:#666666">75</text>
+  <line
+     x2="33.513824"
+     y1="211.88802"
+     y2="211.88802"
+     style="font-size:medium;font-family:sans-serif;text-anchor:end;visibility:visible;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line144"
+     x1="36.513824" />
+  <text
+     x="24.513826"
+     y="215.88802"
+     id="text146-1"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:end;visibility:visible;fill:#666666">100</text>
+  <line
+     x2="33.513824"
+     y1="190.79427"
+     y2="190.79427"
+     style="font-size:medium;font-family:sans-serif;text-anchor:end;visibility:visible;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line150"
+     x1="36.513824" />
+  <text
+     x="24.513826"
+     y="194.79427"
+     id="text152-1"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:end;visibility:visible;fill:#666666">125</text>
+  <line
+     x2="33.513824"
+     y1="169.70052"
+     y2="169.70052"
+     style="font-size:medium;font-family:sans-serif;text-anchor:end;visibility:visible;fill:none;stroke:#000000;shape-rendering:crispEdges"
+     id="line156"
+     x1="36.513824" />
+  <text
+     x="24.513826"
+     y="173.70052"
+     id="text158-5"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-anchor:end;visibility:visible;fill:#666666">150</text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.75px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#111111;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="289.3653"
+     y="191.61047"
+     id="text4277"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan4279"
+       x="289.3653"
+       y="191.61047">Magnitude of</tspan><tspan
+       sodipodi:role="line"
+       x="289.3653"
+       y="208.79797"
+       id="tspan4281">decoupling</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 288.02913,163 11,0 0,65 -11,0"
+     id="path4285"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:16.25px;line-height:125%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="1.5922327"
+     y="18.980583"
+     id="text3577"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3579"
+       x="1.5922327"
+       y="18.980583">Legend</tspan></text>
+</svg>

@@ -139,6 +139,34 @@ td.sort-desc:before{content: "▼";color:#111111;font-size:0.8em;line-height:1em
 	line-height:1.75em;
 }
 
+.sortby{
+	position:relative;
+	line-height:1.4em;
+	border-bottom:1px dotted #dddddd;
+	padding:0em 0em 0.25em 1em;
+	margin-left:1.25em;
+	cursor:pointer;
+	color:#666666;
+	font-size:0.9em;
+}
+.sortby:before{
+	content:"";
+	width:0.6em;
+	height:0.6em;
+	border-radius:0.3em;
+	border:1px solid #666666;
+	background-color:#ffffff;
+	position:absolute;
+	left:0em;
+	top:0.3em;
+}
+
+.sortby.selected{font-weight:normal;color:#333333;}
+.sortby.selected:before{
+	border:1px solid #333333;
+	background-color:#333333;
+}
+
 @media (min-width:0px){
 
 }

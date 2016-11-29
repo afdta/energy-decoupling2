@@ -87,8 +87,15 @@ l2 <- lapply(split(ftf, ftf$stabbr), function(e){
   return(ee)
 })
 
+#sort parameters
+sp1 <- eg[,1:5]
+names(sp1)[4:5] <- c("gdp", "co2")
+sp1$diff <- sp1$gdp - sp1$co2
+sp2 <- ft[,c("state","share_coal","share_natgas","share_nuclear","share_hydro","share_windsolar")]
+sp3 <- merge(sp1, sp2, by="state")
+sp <- split(sp3, sp3$stabbr)
 
-j <- toJSON(list(trends=l, fuel=l2))
+j <- toJSON(list(trends=l, fuel=l2, sort=sp))
 
 writeLines(j, "/home/alec/Projects/Brookings/energy-decoupling/data/energy_decoupling.json")
 
