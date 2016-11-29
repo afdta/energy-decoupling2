@@ -26,7 +26,10 @@ residual <- function(g){
   new_row$fuel <- "other"
   new_row$fuel_type <- "Other"
   new_row$chg <- NA
-  new_row$share <- 1-sum(g$share)
+    other_share <- 1-sum(g$share)
+    if(other_share < 0){other_share <- 0}
+  new_row$share <- other_share
+  
   return(rbind(g, new_row))
 }
 ftf <- ftt %>% group_by(stabbr) %>% do(residual(.))
@@ -77,7 +80,7 @@ l <- lapply(st, fn)
 l2 <- lapply(split(ftf, ftf$stabbr), function(e){
   ee <- e[order(e$fuel_type), ]
   cat("Sum of data frame shares in ")
-  cat(ee[1,"state"])
+  cat(ee$state[1])
   cat(": ")
   cat(sum(ee$share))
   cat("\n")
@@ -91,6 +94,9 @@ writeLines(j, "/home/alec/Projects/Brookings/energy-decoupling/data/energy_decou
 
 
 #analysis - review this code and non-standard vs standard evaluation
+max(sapply(l, function(e){return(max(c(e$CO2i, e$GDPi)))}))
+min(sapply(l, function(e){return(min(c(e$CO2i, e$GDPi)))}))
+
 gg_data <- tidy %>% group_by(state, stabbr) %>% do(fn2(.))
 
 gg <- ggplot(gg_data, aes(x=year))
@@ -98,7 +104,7 @@ gg + geom_line(aes(y=GDPi), color = "#008837") + geom_line(aes(y=CO2i, color=ife
     facet_wrap(~state)
 
 
-gg2 <- ggplot(ftf, aes(x=fuel_type)) + geom_bar(aes(y=share, color=fuel_type), stat="identity")
+gg2 <- ggplot(ftf, aes(x=fuel_type)) + geom_bar(aes(y=share, fill=fuel_type), stat="identity")
 gg2 + facet_wrap(~state)
 
 
