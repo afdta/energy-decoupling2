@@ -20,6 +20,9 @@ ftt <- ft %>% gather(var, val, share_coal:chg_windsolar) %>%
 ftt$fuel_type <- factor(ftt$fuel, levels=c("coal", "natgas", "nuclear", "hydro", "windsolar", "other"),
                         labels=c("Coal", "Natural gas", "Nuclear", "Hydroelectric", "Wind and solar", "Other"))
 
+ft_check <- read.csv("/home/alec/Projects/Brookings/energy-decoupling/data/data check/Electricity generation by fuel type.csv", stringsAsFactors=FALSE, na.strings=c("N/A",".",""))
+all.equal(ft, ft_check)
+
 #computer other residual
 residual <- function(g){
   new_row <- g[1, ]
