@@ -81,14 +81,15 @@ function mainfn(){
 									 ;
 
 		var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
+		var colorbrewer= ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f']
 		var fuel_color = function(d){
 			var cols = {
-				coal:"#e41a1c", 
-			 	natgas: "#ff7f00", 
-			 	nuclear:"#4daf4a", 
-			 	hydro: "#377eb8", 
-			 	windsolar: "#ffff33", 
-			 	other:"#666666"
+				coal:colorbrewer[1], 
+			 	natgas: colorbrewer[5], 
+			 	nuclear:colorbrewer[3], 
+			 	hydro: colorbrewer[0], 
+			 	windsolar: colorbrewer[4], 
+			 	other:colorbrewer[2]
 			}
 			return cols[d];
 		}
@@ -106,7 +107,7 @@ function mainfn(){
 			plots.u.exit().remove();
 			plots.e = plots.u.enter().append("g").classed("grid-cell",true);
 			  var shift = plots.e.append("g").classed("v-shift",true);
-				  shift.append("rect");
+				  shift.append("rect").classed("background",true);
 				  shift.append("text").classed("state-label",true).attr("x", "10")
 				  						.attr("y", "30")
 				  						.text(function(d,i){return d.state})
@@ -115,17 +116,27 @@ function mainfn(){
 				  						.style("font-weight","normal")
 				  						;
 
-				  shift.append("g").classed("grid-lines",true).attr("transform","translate(0,10)");
-				  shift.append("g").classed("line-plot",true).attr("transform","translate(0,10)");
-				  shift.append("g").classed("bar-chart",true).attr("transform","translate(0,0)");
-				  shift.append("g").classed("x-axis",true).attr("transform","translate(0,"+(plots.height-15)+")");
-				  shift.append("g").classed("y-axis",true).attr("transform","translate(15,10)");
+				  
+		 		  var lp = shift.append("g").classed("line-plot",true);
+		 		  	  lp.append("g").classed("grid-lines",true);
+				  	  lp.append("g").classed("x-axis",true).attr("transform","translate(0,"+(plots.height-15)+")");
+				  	  lp.append("g").classed("y-axis",true).attr("transform","translate(15,0)");
+				  
+				  shift.append("g").classed("bar-chart",true).attr("transform","translate(10,0)")
+				  	   .append("line").attr("x1",-1).attr("x2",-1)
+				  	   				  .attr("y1",40).attr("y2",(plots.height-0))
+				  	   				  .attr("stroke-width",1)
+				  	   				  .attr("stroke","#aaaaaa")
+				  	   				  .style("shape-rendering","crispEdges")
+				  	   ;
+
 
 			plots.b = plots.e.merge(plots.u);
 			
 			plots.shift = plots.b.select("g.v-shift");
 			plots.line = plots.shift.select("g.line-plot");
 			plots.bar = plots.shift.select("g.bar-chart");
+			
 			plots.shift.select("text.state-label").text(function(d,i){return (i+1)+". "+d.state});
 
 			/*var rects = shift.select("rect")
@@ -138,21 +149,21 @@ function mainfn(){
 
 			
 			//add y-axis
-			var yg = plots.shift.select("g.y-axis");
+			var yg = plots.line.select("g.y-axis");
 			yaxis(yg);
 			yg.selectAll("path").attr("stroke","none");
 			yg.selectAll("line").style("shape-rendering","crispEdges");
 			yg.selectAll("text").attr("fill","#666666");
 
 			//add x-axis
-			var xg = plots.shift.select("g.x-axis");
+			var xg = plots.line.select("g.x-axis");
 			xaxis(xg);
 			xg.selectAll("path").attr("stroke","none");
 			xg.selectAll("line").style("shape-rendering","crispEdges");
 			xg.selectAll("text").attr("fill","#666666");
 
 			//style axes
-			plots.shift.select("g.grid-lines")
+			plots.line.select("g.grid-lines")
 					.selectAll("line")
 					.data(yaxis.tickValues())
 					.enter()
@@ -171,9 +182,9 @@ function mainfn(){
 					;
 
 
-			plots.line.selectAll("path").data(function(d,i){
+			plots.line.selectAll("path.trend-line").data(function(d,i){
 				return [index_line_gdp(d.trend), index_line_co2(d.trend)];
-			}).enter().append("path").attr("d", function(d,i){return d})
+			}).enter().append("path").classed("trend-line", true).attr("d", function(d,i){return d})
 									 .attr("stroke", function(d,i){
 									 	return i === 0 ? "#222222" : "#222222";
 									 })
@@ -223,7 +234,7 @@ function mainfn(){
 
 			var bars = { };
 			bars.u = plots.bar.selectAll("g.bars").data(function(d){
-				var D = {year:2014};
+				/*var D = {year:2014};
 				for(var i=0; i<d.fuel.length; i++){
 					D[d.fuel[i].fuel] = d.fuel[i];
 				}
@@ -237,15 +248,30 @@ function mainfn(){
 				stack.keys(keys);
 
 				var s = stack([D]);
-				return(s);
+				return(s);*/
+				return d.fuel.slice(0).sort(function(a,b){
+					var aval = "share_" + a.fuel;
+					var bval = "share_" + b.fuel;
+					if(aval == sortkey){return -1}
+					else if(bval == sortkey){return 1}
+					else{return 0}
+					//else{return b.share - a.share}
+				});
 			});
 			bars.e = bars.u.enter()
 			  .append("g")
 			  .classed("bars", true)
-			  .attr("transform","translate(5,35)");
+			  ;
+			bars.e.append("rect");
+			bars.e.append("text").classed("fuel-type",true);
+			bars.e.append("text").classed("fuel-share",true);
+			  //.attr("transform","translate(5,35)");
 			bars.b = bars.e.merge(bars.u);
+			bars.b.attr("transform", function(d,i){
+				return "translate(0," + ((i*19)+45) + ")"; 
+			})
 
-			var segments = {};
+			/*var segments = {};
 			segments.u = bars.b.selectAll("g")
 			  .data(function(D){
 			  	var key = D.key;
@@ -261,26 +287,33 @@ function mainfn(){
 			segments.b = segments.e.merge(segments.u)
 				.attr("transform", function(d,i){
 					return "translate("+d.start+",0)";
-				});
+				});*/
 
-			segments.b.select("rect")
-				.attr("height",12)
-				.attr("width", function(d,i){return d.end-d.start})
+			bars.b.select("rect")
+				.attr("height",14)
+				.attr("width", function(d,i){return bar_scale(d.share)})
 				.attr("x", function(d,i){return 0})
 				.attr("y", function(d,i){return 0})
-				.attr("fill",function(d,i){return fuel_color(d.fuel)});
+				.attr("fill",function(d,i){return fuel_color(d.fuel)})
+				;
 
-			var blabels = {};
+			/*var blabels = {};
 			blabels.u = segments.b.selectAll("text").data(function(d,i){return [d]});
 			blabels.e = blabels.u.enter().append("text");
-			blabels.b = blabels.e.merge(blabels.u)
-				.text(function(d,i){return (Math.round(d.value*1000)/10)+"%"})
-				.style("font-size","10px")
-				.attr("text-anchor","middle")
-				.attr("x",function(d,i){return (d.end-d.start)/2})
-				.attr("y","10")
-				.attr("fill", function(d,i){return fuel_color_text(d.fuel)})
-				.style("visibility", function(d,i){return d.value >= 0.2 ? "visible" : "hidden"})
+			blabels.b = blabels.e.merge(blabels.u)*/
+
+			bars.b.select("text.fuel-share")
+				.text(function(d,i){return d.fuel_type + ": " +(Math.round(d.share*1000)/10)+"%"})
+				.style("font-size","11px")
+				.attr("text-anchor","start")
+				.attr("x",function(d,i){
+					return 2; 
+					//bar_scale(d.share) + 5
+				})
+				.attr("y","11")
+				//.attr("fill", function(d,i){return d.share > 0.05 ? "#333333" : "#666666"})
+				//.style("font-weight", function(d,i){return sortkey == ("share_"+d.fuel) ? "bold" : "normal"})
+				//.style("visibility", function(d,i){return d.value >= 0.05 ? "visible" : "hidden"})
 
 		}
 
@@ -329,7 +362,7 @@ function mainfn(){
 
 		//plot control
 
-		control_outer.append("div").style("margin-bottom","2em").append("img").style("width","306px").attr("src","./build/legend.png");
+		//control_outer.append("div").style("margin-bottom","2em").append("img").style("width","306px").attr("src","./build/legend.png");
 
 		var sortby = {};
 		
@@ -341,9 +374,10 @@ function mainfn(){
 		sortby.diff = control.append("p").text("Percentage point difference between GDP and emissions growth, 2000–14").classed("sortby selected",true).datum("diff");
 		sortby.gdp = control.append("p").text("Change in real GDP, 2000–14").classed("sortby",true).datum("gdp");
 		sortby.co2 = control.append("p").text("Change in emissions, 2000–14").classed("sortby",true).datum("co2");
-		sortby.state = control.append("p").text("State name").classed("sortby",true).datum("state");
+		//sortby.state = control.append("p").text("State name").classed("sortby",true).datum("state");
 
-		control.append("p").style("margin","2em 0em 0em 0em").style("font-size","0.9em").append("em").text("Share of 2014 electricity production from:");
+		control.append("p").style("margin","2em 0em 0em 0em").style("font-size","0.9em").append("em")
+				.text("Share of 2014 net electricity generation from:");
 		sortby.coal = control.append("p").text("Coal").classed("sortby",true).datum("share_coal");
 		sortby.gas = control.append("p").text("Natural gas").classed("sortby",true).datum("share_natgas");
 		sortby.nuclear = control.append("p").text("Nuclear").classed("sortby",true).datum("share_nuclear");
@@ -364,9 +398,19 @@ function mainfn(){
 				else{
 					return comp;
 				}
-			})
+			});
+
 			draw_plots();
-			lay_it_out();			
+			lay_it_out();
+
+			if(sortkey in {diff:1, co2:1, gdp:1}){
+				plots.bar.style("display","none");
+				plots.line.style("display","inline");
+			}
+			else{
+				plots.bar.style("display","inline");
+				plots.line.style("display","none");
+			}			
 		}
 
 		sortbuttons.on("mousedown", function(d,i){

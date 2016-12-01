@@ -24,6 +24,7 @@
 .metro-interactive p, .metro-interactive text{
 	margin:1em 0em;
 	color:#111111;
+	fill:#111111;
 }
 .metro-interactive h1{
 	font-size:2em;
