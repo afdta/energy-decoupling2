@@ -39,6 +39,12 @@ ftf <- ftt %>% group_by(stabbr) %>% do(residual(.))
 
 table(ftf$fuel,ftf$fuel_type)
 
+#per capita emissions
+pc <- read.csv("/home/alec/Projects/Brookings/energy-decoupling/data/co2_per_capita.csv", stringsAsFactors = FALSE)
+pc <- merge(states, pc, by="state")
+pc_final <- split(pc, pc$stabbr)
+range(c(pc$co2_pc_2000,pc$co2_pc_2014))
+
 #emissions and gdp
 eg <- read.csv("/home/alec/Projects/Brookings/energy-decoupling/data/emissions_and_gdp.csv", stringsAsFactors=FALSE)
 eg$State <- sub("^\\s*", "", eg$State)
@@ -96,9 +102,10 @@ names(sp1)[4:5] <- c("gdp", "co2")
 sp1$diff <- sp1$gdp - sp1$co2
 sp2 <- ft[,c("state","share_coal","share_natgas","share_nuclear","share_hydro","share_windsolar")]
 sp3 <- merge(sp1, sp2, by="state")
-sp <- split(sp3, sp3$stabbr)
+sp4 <- merge(sp3, pc[c("state", "co2_pc_2000", "co2_pc_2014", "chg", "pct_chg")], by="state")
+sp <- split(sp4, sp4$stabbr)
 
-j <- toJSON(list(trends=l, fuel=l2, sort=sp))
+j <- toJSON(list(trends=l, fuel=l2, sort=sp, percap=pc_final))
 
 writeLines(j, "/home/alec/Projects/Brookings/energy-decoupling/data/energy_decoupling.json")
 
@@ -114,9 +121,15 @@ gg + geom_line(aes(y=GDPi), color = "#008837") + geom_line(aes(y=CO2i, color=ife
     facet_wrap(~state)
 
 
-gg2 <- ggplot(ftf, aes(x=fuel_type)) + geom_bar(aes(y=share, fill=fuel_type), stat="identity")
-gg2 + facet_wrap(~state)
+gg2 <- ggplot(ftf, aes(x=fuel_type)) 
+gg2 +geom_bar(aes(y=share, fill=fuel_type), stat="identity") + facet_wrap(~state)
+gg2 +geom_bar(aes(y=chg, fill=fuel_type), stat="identity") + facet_wrap(~state)
 
+
+tidypc <- pc %>% gather(key, value, co2_pc_2000, co2_pc_2014)
+tidypc$year <- as.numeric(sub("co2_pc_", "", tidypc$key))
+gg3 <- ggplot(tidypc, aes(x=year))
+gg3 + geom_bar(aes(y=value), stat="identity") + facet_wrap(~state) + scale_y_continuous(limits=c(0,75))
 
 #EXAMPLES
 # geom_line() is suitable for time series
