@@ -201,7 +201,7 @@ function mainfn(){
 
 
 
-			plots.b = plots.e.merge(plots.u);
+			plots.b = plots.e.merge(plots.u).style("visibility","hidden");
 			
 			plots.shift = plots.b.select("g.v-shift");
 			plots.line = plots.shift.select("g.line-plot");
@@ -624,10 +624,11 @@ function mainfn(){
 				}
 
 				graphic_title.html(titles[sortkey][0]);	
-				graphic_subtitle.html(titles[sortkey][1]);	
+				graphic_subtitle.html(titles[sortkey][1]);
+				plots.b.style("visibility","visible");	
 			}
 			catch(e){
-
+				plots.b.style("visibility","hidden");	
 			}		
 		}
 
