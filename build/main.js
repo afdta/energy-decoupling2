@@ -212,22 +212,27 @@ function mainfn(){
 			var stlabels = plots.shift.select("g.state-labels").selectAll("text.state-label").data(function(d,i){
 				var st = d.state == "District of Columbia" ? "D.C." : d.state;
 				return [
-						{state:st, val:formats[sortkey](d.sort[0][sortkey]), rank:i+1},
-						{state:st, val:formats[sortkey](d.sort[0][sortkey]), rank:i+1}
+						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"],
+						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"]
 					];
 			});
-			stlabels.enter().append("text").classed("state-label",true).merge(stlabels)
+			var stlabels2 = stlabels.enter().append("text").classed("state-label",true).merge(stlabels)
 			  			.attr("x", "1")
   						.attr("y", "30")
   						.attr("text-anchor","start")
-  						.style("font-size","15px")
   						.style("font-weight","bold")
   						.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
   						.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
   						.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"})
-  						.html(function(d,i){
-							return "<tspan>"+d.rank+". </tspan> "+ d.state + " <tspan> (" + d.val + ")</tspan>";
-						});
+  						;
+  			var stlabels3 = stlabels2.selectAll("tspan").data(function(d,i){
+  				return d;
+  			});
+  			stlabels3.enter().append("tspan").merge(stlabels3)
+  						.text(function(d,i){return d+" "})
+  						.style("font-size",function(d,i){
+  							return i==1 ? "15px" : "11px";
+  						});
 			
 			//add y-axis
 			var yg = plots.line.select("g.y-axis");
