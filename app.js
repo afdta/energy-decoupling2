@@ -919,9 +919,9 @@ function mainfn(){
 		var sortbuttons = control_inner.selectAll("p.sortby");
 
 		var titles = {
-			diff: ["Real GDP and CO2 emissions, 2000–14", "Sorted by the percentage point difference between GDP and emissions growth"],
-			gdp: ["Real GDP and CO2 emissions, 2000–14", "Sorted by percent change in real GDP"],
-			co2: ["Real GDP and CO2 emissions, 2000–14", "Sorted by percent change in CO2 emissions"],
+			diff: ['Real GDP (<span style="color:#0d73d6">—</span>) and CO2 emissions (<span style="color:#dc2a2a">—</span>), 2000–14', "Sorted by the percentage point difference between GDP and emissions growth"],
+			gdp: ['Real GDP (<span style="color:#0d73d6">—</span>) and CO2 emissions (<span style="color:#dc2a2a">—</span>), 2000–14', "Sorted by percent change in real GDP"],
+			co2: ['Real GDP (<span style="color:#0d73d6">—</span>) and CO2 emissions (<span style="color:#dc2a2a">—</span>), 2000–14', "Sorted by percent change in CO2 emissions"],
 			
 			chg: ["CO2 emissions per person (metric tons)", "Sorted by the absolute change from 2000 to 2014"],
 			pct_chg: ["CO2 emissions per person (metric tons)", "Sorted by percentage change from 2000 to 2014"],
@@ -980,8 +980,8 @@ function mainfn(){
 				
 				}
 
-				graphic_title.text(titles[sortkey][0]);	
-				graphic_subtitle.text(titles[sortkey][1]);	
+				graphic_title.html(titles[sortkey][0]);	
+				graphic_subtitle.html(titles[sortkey][1]);	
 			}
 			catch(e){
 
