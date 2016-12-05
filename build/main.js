@@ -15,7 +15,10 @@ function mainfn(){
 	var state = history();
 	var url = dir.url("data", "energy_decoupling.json");
 	
-	var wrap = d3.select("#energy-decoupling").style("max-width","1365px").style("margin","0px auto");
+	var wrap = d3.select("#energy-decoupling")
+					.style("max-width","1600px")
+					.style("margin","0px auto")
+					.style("position","relative");
 	
 
 	d3.json(url, function(err,dat){
@@ -30,23 +33,51 @@ function mainfn(){
 			}
 		}
 
-		var graphic_wrap = d3.select("#energy-decoupling-graphic");
-		var svg_wrap = graphic_wrap.append("div").style("margin","0px auto");
+		var graphic_wrap = d3.select("#energy-decoupling-graphic")
+							 .style("margin","0px auto")
+							 .style("position","relative")
+							 .style("z-index","5")
+							 .style("padding","0em 20px")
+							 .style("border","0px solid #dddddd")
+							 .style("min-width","350px")
+							 ;
+
+		var svg_wrap = graphic_wrap.append("div")
+									.style("float","left")
+									.style("border-left","0px solid #dddddd");
+		
+		var title_wrap = svg_wrap.append("div").style("padding-right","50px");
+		var show_menu = title_wrap.append("div").style("position","absolute")
+												.style("top","1em")
+												.style("right","20px")
+												.style("width","40px")
+												.style("height","40px")
+												.style("display","none")
+												.style("cursor","pointer")
+												;
+
+		var three_lines = show_menu.append("svg")
+									.selectAll("rect").data([1,2,3]).enter().append("rect")
+									.attr("x",0)
+									.attr("y",function(d,i){
+										return (i*9)+5;
+									})
+									.attr("width","40px")
+									.attr("height","4px")
+									.attr("fill","#333333")
+									;
+
+		var graphic_title = title_wrap.append("p")
+		var graphic_subtitle = title_wrap.append("p").style("font-weight","normal");	
+		title_wrap.selectAll("p").style("padding", function(d,i){return i==0 ? "1em 0em 0.25em 1em" : "0em 0em 1.3em 1em"})
+								.style("margin","0em 0em 0em 0em")
+								.style("font-weight",function(d,i){return i==0 ? "bold" : "normal"})
+								.text("Chart title");
+
 		var svg = svg_wrap.append("svg").style("width","100%");
 		
 
 		var plots = {width:190, height:170};
-
-		//function to return available width for grid
-		var width_avail = function(cols){
-			if(!!cols){
-				return dimensions(wrap.node(), 5*plots.width).width;
-			}
-			else{
-				return dimensions(wrap.node()).width;
-			}
-			
-		}
 
 		var grid = grid_layout().cell_dims(plots.width, plots.height).ncells(51).padding(5,5,5,15);
 
@@ -101,7 +132,8 @@ function mainfn(){
 									 ;
 
 		var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
-		var colorbrewer= ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f']
+		var colorbrewer= ['#b3e2cd','#fdcdac','#cbd5e8','#f4cae4','#e6f5c9','#fff2ae'];
+		var colorbrewer = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f'];
 		var fuel_color = function(d){
 			var cols = {
 				coal:colorbrewer[1], 
@@ -191,19 +223,11 @@ function mainfn(){
   						.style("font-size","15px")
   						.style("font-weight","bold")
   						.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
+  						.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
   						.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"})
   						.html(function(d,i){
 							return "<tspan>"+d.rank+". </tspan> "+ d.state + " <tspan> (" + d.val + ")</tspan>";
 						});
-
-			/*var rects = shift.select("rect")
-							   .attr("width",plots.width-10)
-							   .attr("height",plots.height-35)
-							   .attr("fill","#ffff00")
-							   .attr("x","5")
-							   .attr("y","40");*/
-
-
 			
 			//add y-axis
 			var yg = plots.line.select("g.y-axis");
@@ -243,7 +267,7 @@ function mainfn(){
 				return [index_line_gdp(d.trend), index_line_co2(d.trend)];
 			}).enter().append("path").classed("trend-line", true).attr("d", function(d,i){return d})
 									 .attr("stroke", function(d,i){
-									 	return i === 0 ? "#222222" : "#222222";
+									 	return i === 0 ? "#0d73d6" : "#dc2a2a";
 									 })
 									 .attr("stroke-dasharray", function(d,i){
 									 	return i === 0 ? "none" : "3,3";
@@ -264,7 +288,9 @@ function mainfn(){
 			  .attr("r",3)
 			  .attr("cx","0")
 			  .attr("cy","0")
-			  .attr("fill", "#222222")
+			  .attr("fill", function(d,i){
+			 	return i === 0 ? "#0d73d6" : "#dc2a2a";
+			   })
 			;
 
 			labels.append("text")
@@ -321,7 +347,7 @@ function mainfn(){
 								 .attr("width",pc_year_scale.bandwidth())
 								 .attr("height", function(d){return (plots.height-25) - pc_scale(d.val)})
 								 .attr("y", function(d){return pc_scale(d.val)})
-								 .attr("fill", fuel_color("windsolar"))
+								 .attr("fill", "#0d73d6")
 								 ;
 
 			pcbars.b.select("text").attr("x",pc_year_scale.bandwidth()/2)
@@ -413,31 +439,74 @@ function mainfn(){
 				.attr("y","11")
 		}
 
-		var control_outer = d3.select("#energy-decoupling-control")
-				.style("min-width", "250px")
+		var control = d3.select("#energy-decoupling-control")
+				.style("width", "350px")
 				.style("margin","0px auto")
-				.style("padding","1em 2em 1em 1em");
+				.style("padding","0em")
+				.style("z-index",10)
+				;
+		
+		var control_inner = control.append("div").classed("c-fix",true)
+								   .style("padding","1em 20px")
+								   .style("border","2px solid #fafafa")
+								   .style("border-width","0px 0px 2px 2px")
+								   .style("background-color","#ececec")
+								   .style("margin","0em 20px 0em -20px")
+								   ;
 
 		var resize_timer;
 		var firstlayout = true;
 		function lay_it_out(){
 
-			var fivecolwidth = width_avail(5);
+			//width of 5 grid columns or whatever is available in wrap
+			var max_width = dimensions(wrap.node()).width;
+			var fivecols = 5*plots.width;
+			
+			//account for 42px of padding/borders on graphic_wrap which uses border-box sizing
+			var width = (fivecols + 42) < max_width ? fivecols : max_width-42;  
+			
+			//set the available width for grid
+			grid.set_width(width);
 
-			grid.set_width(fivecolwidth+20)	
+			//the actual width of the grid + 42px for padding/borders
+			var gw_width = grid.get_width() + 42;	
 
+			svg.style("width",grid.get_width()+"px");
 			svg.style("height", grid.get_height()+"px");
-			svg_wrap.style("width", grid.get_width()+"px");
 
-			var extra = width_avail() - grid.get_width();
+			var extra = max_width - gw_width;
 			
 			if(extra > 350){
-				control_outer.style("float","left").style("width","350px");
-				svg_wrap.style("float","left").style("width", grid.get_width()+"px");
+				control.style("float","left")
+						.style("right","auto")
+						.style("position","relative")
+						.style("display","block").style("opacity",1)
+						;
+				show_menu.style("display","none");
+				control_inner.style("margin","0em 20px 0em -20px");
+				graphic_wrap.style("width", (gw_width+350)+"px");
+
+				show_menu.on("mousedown", null);
+				graphic_wrap.on("mousedown", null);
 			}
 			else{
-				control_outer.style("float","none").style("width","auto");
-				svg_wrap.style("float","none").style("width",grid.get_width()+"px");
+				control.style("float","none")
+							 .style("position","absolute")
+							 .style("right","0px")
+							 .style("top","0px")
+							 .style("display","none").style("opacity",0)
+							 ;
+				show_menu.style("display","block");
+				control_inner.style("margin","0em");
+				graphic_wrap.style("width", gw_width+"px");
+
+				show_menu.on("mousedown", function(d,i){
+					control.transition().style("opacity",1).on("start",function(){control.style("display","block")});
+					d3.event.stopPropagation();
+				});
+				graphic_wrap.on("mousedown", function(d,i){
+					control.transition().style("opacity",0).on("end",function(){control.style("display","none")});
+				})
 			}
 
 			clearTimeout(resize_timer);
@@ -457,85 +526,104 @@ function mainfn(){
 			}, firstlayout ? 0 : 150);
 		}
 
-		//plot control
-
-		//control_outer.append("div").style("margin-bottom","2em").append("img").style("width","306px").attr("src","./build/legend.png");
-
 		var sortby = {};
-		
 
-		var control = control_outer.append("div").style("padding","1em 0em 1em 0em").style("border","1px solid #dddddd").classed("c-fix",true);
-
-		var box1 = control.append("div").style("float","left").style("padding","0em 1em 0em 1em");
+		var box1 = control_inner.append("div").style("float","left").style("padding","0em");
 		
-			box1.append("p").style("margin","0em 0em 0em 0em").append("strong").text("Sort the 50 states and D.C. by");
+			box1.append("p").style("margin","0em 0em 0em 0em").append("strong").text("Sort the 50 states and D.C. by ...");
 
 			box1.append("p").style("margin","1em 0em 0em 0em").style("font-size","0.9em").append("em").text("Decoupling trends, 2000–14");
 			sortby.diff = box1.append("p").text("Percentage point difference between GDP and emissions growth").classed("sortby selected",true).datum("diff");
 			sortby.gdp = box1.append("p").text("Percent change in real GDP").classed("sortby",true).datum("gdp");
 			sortby.co2 = box1.append("p").text("Percent change in emissions").classed("sortby",true).datum("co2");
 			
-		var box2 = control.append("div").style("float","left").style("padding","0em 1em 0em 1em");
+		var box2 = control_inner.append("div").style("float","left").style("padding","0em");
 
 		box2.append("p").style("margin","1em 0em 0em 0em").style("font-size","0.9em").append("em").text("CO2 emissions per person (metric tons)");
 		sortby.chg = box2.append("p").text("Absolute change, 2000–14").classed("sortby",true).datum("chg");
 		sortby.pct_chg = box2.append("p").text("Percent change, 2000–14").classed("sortby",true).datum("pct_chg");
 		sortby.pc2014 = box2.append("p").text("2014 levels").classed("sortby",true).datum("co2_pc_2014");
 
-		var box3 = control.append("div").style("float","left").style("padding","0em 1em 0em 1em");
+		var box3 = control_inner.append("div").style("float","left").style("padding","0em");
 
 		box3.append("p").style("margin","1em 0em 0em 0em").style("font-size","0.9em").append("em")
-				.text("Share of 2014 net electricity generation from");
+				.text("Share of 2014 net electricity generation by fuel type");
 		sortby.coal = box3.append("p").text("Coal").classed("sortby",true).datum("share_coal");
 		sortby.gas = box3.append("p").text("Natural gas").classed("sortby",true).datum("share_natgas");
 		sortby.nuclear = box3.append("p").text("Nuclear").classed("sortby",true).datum("share_nuclear");
 		sortby.hydro = box3.append("p").text("Hydro").classed("sortby",true).datum("share_hydro");
 		sortby.windsolar = box3.append("p").text("Wind and solar").classed("sortby",true).datum("share_windsolar");
 
-		var sortbuttons = control.selectAll("p.sortby");
+		var sortbuttons = control_inner.selectAll("p.sortby");
+
+		var titles = {
+			diff: ["Real GDP and CO2 emissions, 2000–14", "Sorted by the percentage point difference between GDP and emissions growth"],
+			gdp: ["Real GDP and CO2 emissions, 2000–14", "Sorted by percent change in real GDP"],
+			co2: ["Real GDP and CO2 emissions, 2000–14", "Sorted by percent change in CO2 emissions"],
+			
+			chg: ["CO2 emissions per person (metric tons)", "Sorted by the absolute change from 2000 to 2014"],
+			pct_chg: ["CO2 emissions per person (metric tons)", "Sorted by percentage change from 2000 to 2014"],
+			co2_pc_2014: ["CO2 emissions per person (metric tons)", "Sorted by 2014 emissions per person"],
+			
+			share_coal: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from coal"],
+			share_natgas: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from natural gas"],
+			share_nuclear: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from nuclear"],
+			share_hydro: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from hydroelectric"],
+			share_windsolar: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from wind and solar"]
+		}
+
+
 
 		function sort_and_draw(key){
-			sortkey = key;
-			data.sort(function(a,b){
-				var aval = a.sort[0][key];
-				var bval = b.sort[0][key];
-				var comp =  aval >= bval ? -1 : 1; 
-				if(key=="state" || key=="co2" || key=="co2_pc_2014" || key=="chg" || key=="pct_chg"){
-					return comp*(-1);
+			try{
+				sortkey = key;
+				data.sort(function(a,b){
+					var aval = a.sort[0][key];
+					var bval = b.sort[0][key];
+					var comp =  aval >= bval ? -1 : 1; 
+					if(key=="state" || key=="co2" || key=="co2_pc_2014" || key=="chg" || key=="pct_chg"){
+						return comp*(-1);
+					}
+					else{
+						return comp;
+					}
+				});
+
+				draw_plots();
+				lay_it_out();
+
+				if(sortkey in {diff:1, co2:1, gdp:1}){
+					//hide
+					plots.bar.transition().duration(300).style("opacity",0).on("end", function(){plots.bar.style("display","none")})
+					plots.pc.transition().duration(300).style("opacity",0).on("end", function(){plots.pc.style("display","none")})
+					
+					//show
+					plots.line.transition().duration(300).style("opacity",1).on("start", function(){plots.line.style("display","inline")})
 				}
+				else if(sortkey in {co2_pc_2000:1, co2_pc_2014:1, chg:1, pct_chg:1}){
+					//hide
+					plots.bar.transition().duration(300).style("opacity",0).on("end", function(){plots.bar.style("display","none")})
+					plots.line.transition().duration(300).style("opacity",0).on("end", function(){plots.line.style("display","none")})
+					
+					//show
+					plots.pc.transition().duration(300).style("opacity",1).on("start", function(){plots.pc.style("display","inline")})
+				}					
 				else{
-					return comp;
+					//hide
+					plots.pc.transition().duration(300).style("opacity",0).on("end", function(){plots.pc.style("display","none")})
+					plots.line.transition().duration(300).style("opacity",0).on("end", function(){plots.line.style("display","none")})
+					
+					//show
+					plots.bar.transition().duration(300).style("opacity",1).on("start", function(){plots.bar.style("display","inline")})
+				
 				}
-			});
 
-			draw_plots();
-			lay_it_out();
-
-			if(sortkey in {diff:1, co2:1, gdp:1}){
-				//hide
-				plots.bar.transition().duration(300).style("opacity",0).on("end", function(){plots.bar.style("display","none")})
-				plots.pc.transition().duration(300).style("opacity",0).on("end", function(){plots.pc.style("display","none")})
-				
-				//show
-				plots.line.transition().duration(300).style("opacity",1).on("start", function(){plots.line.style("display","inline")})
+				graphic_title.text(titles[sortkey][0]);	
+				graphic_subtitle.text(titles[sortkey][1]);	
 			}
-			else if(sortkey in {co2_pc_2000:1, co2_pc_2014:1, chg:1, pct_chg:1}){
-				//hide
-				plots.bar.transition().duration(300).style("opacity",0).on("end", function(){plots.bar.style("display","none")})
-				plots.line.transition().duration(300).style("opacity",0).on("end", function(){plots.line.style("display","none")})
-				
-				//show
-				plots.pc.transition().duration(300).style("opacity",1).on("start", function(){plots.pc.style("display","inline")})
-			}					
-			else{
-				//hide
-				plots.pc.transition().duration(300).style("opacity",0).on("end", function(){plots.pc.style("display","none")})
-				plots.line.transition().duration(300).style("opacity",0).on("end", function(){plots.line.style("display","none")})
-				
-				//show
-				plots.bar.transition().duration(300).style("opacity",1).on("start", function(){plots.bar.style("display","inline")})
-			
-			}			
+			catch(e){
+
+			}		
 		}
 
 		sortbuttons.on("mousedown", function(d,i){
