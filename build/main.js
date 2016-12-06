@@ -1,8 +1,3 @@
-//gig economy interactive - oct 2016
-
-import card from '../../js-modules/card-api.js';
-import state_select from '../../js-modules/state-select.js';
-import history from '../../js-modules/history.js';
 import dir from '../../js-modules/rackspace.js';
 import grid_layout from '../../js-modules/grid-layout.js';
 import dimensions from '../../js-modules/dimensions.js';
@@ -12,165 +7,171 @@ dir.local();
 dir.add("data");
 
 function mainfn(){
-	var state = history();
-	var url = dir.url("data", "energy_decoupling.json");
-	
+	//outer graphics wrapper -- used to determine available width for graphic	
 	var wrap = d3.select("#energy-decoupling")
 					.style("max-width","1600px")
 					.style("margin","0px auto")
-					.style("position","relative");
+					.style("position","relative")
+					;
 	
+	//main graphic wrapper
+	var graphic_wrap = d3.select("#energy-decoupling-graphic")
+						 .style("margin","0px auto")
+						 .style("position","relative")
+						 .style("z-index","5")
+						 .style("padding","0em 20px")
+						 .style("border","0px solid #dddddd")
+						 .style("min-width","350px")
+						 ;
 
-	d3.json(url, function(err,dat){
-		var data = [];
-		for(var p in dat.trends){
-			if(dat.trends.hasOwnProperty(p)){
-				data.push({trend: dat.trends[p], 
-						   fuel: dat.fuel[p], 
-						   sort: dat.sort[p],
-						   pc: dat.percap[p][0],
-						   state:dat.trends[p][0].state==dat.fuel[p][0].state ? dat.trends[p][0].state : "Error"});
-			}
-		}
+	//control panel
+	var control = graphic_wrap.append("div")
+			.classed("makesans disable-highlight", true)
+			.style("width", "350px")
+			.style("margin","0px auto")
+			.style("padding","0em")
+			.style("z-index",10)
+			;
+	
+	var control_inner = control
+		   .append("div")
+		   .classed("c-fix",true)
+		   .style("padding","1em 20px")
+		   .style("border","2px solid #fafafa")
+		   .style("border-width","0px 0px 2px 2px")
+		   .style("background-color","#ececec")
+		   .style("margin","0em 20px 0em -20px")
+		   ;
 
-		var graphic_wrap = d3.select("#energy-decoupling-graphic")
-							 .style("margin","0px auto")
-							 .style("position","relative")
-							 .style("z-index","5")
-							 .style("padding","0em 20px")
-							 .style("border","0px solid #dddddd")
-							 .style("min-width","350px")
-							 ;
+	//plot container
+	var svg_wrap = graphic_wrap.append("div").style("float","left");
+	
+	//title area	
+	var title_wrap = svg_wrap.append("div").style("padding-right","50px");
+	
+	//menu show button
+	var show_menu = title_wrap.append("div")
+							.style("position","absolute")
+							.style("top","1em")
+							.style("right","20px")
+							.style("width","40px")
+							.style("height","40px")
+							.style("display","none")
+							.style("cursor","pointer")
+							;
 
-		var svg_wrap = graphic_wrap.append("div")
-									.style("float","left")
-									.style("border-left","0px solid #dddddd");
-		
-		var title_wrap = svg_wrap.append("div").style("padding-right","50px");
-		var show_menu = title_wrap.append("div").style("position","absolute")
-												.style("top","1em")
-												.style("right","20px")
-												.style("width","40px")
-												.style("height","40px")
-												.style("display","none")
-												.style("cursor","pointer")
-												;
+	var three_lines = show_menu.append("svg").append("g").selectAll("rect")
+							.data([1,2,3]).enter().append("rect")
+							.attr("x",0)
+							.attr("y",function(d,i){
+								return (i*9)+5;
+							})
+							.attr("width","40px")
+							.attr("height","4px")
+							.attr("fill","#333333")
+							;
 
-		var three_lines = show_menu.append("svg")
-									.selectAll("rect").data([1,2,3]).enter().append("rect")
-									.attr("x",0)
-									.attr("y",function(d,i){
-										return (i*9)+5;
-									})
-									.attr("width","40px")
-									.attr("height","4px")
-									.attr("fill","#333333")
-									;
-
-		var graphic_title = title_wrap.append("p")
-		var graphic_subtitle = title_wrap.append("p").style("font-weight","normal");	
+	//title text
+	var graphic_title = title_wrap.append("p")
+	var graphic_subtitle = title_wrap.append("p").style("font-weight","normal");	
 		title_wrap.selectAll("p").style("padding", function(d,i){return i==0 ? "1em 0em 0.25em 1em" : "0em 0em 1.3em 1em"})
-								.style("margin","0em 0em 0em 0em")
-								.style("font-weight",function(d,i){return i==0 ? "bold" : "normal"})
-								.text("Chart title");
+				.style("margin","0em 0em 0em 0em")
+				.style("font-weight",function(d,i){return i==0 ? "bold" : "normal"})
+				.text("");
 
-		var svg = svg_wrap.append("svg").style("width","100%");
-		
+	//svg
+	var svg = svg_wrap.append("svg").style("width","100%");
 
-		var plots = {width:190, height:170};
+	//plot parameters
+	var plots = {width:190, height:170};
 
-		var grid = grid_layout().cell_dims(plots.width, plots.height).ncells(51).padding(5,5,5,15);
+	//grid layout object
+	var grid = grid_layout().cell_dims(plots.width, plots.height).ncells(51).padding(5,5,5,15);
 
-		//scales - line chart
-		var year_scale = d3.scaleLinear().domain([2000, 2014]).range([25, plots.width-45]);
-		var val_scale = d3.scaleLinear().domain([50,220]).range([plots.height-20, 15]);
-		
+	///////////////////////////////scales and axis generators
+	//line chart scales
+	var year_scale = d3.scaleLinear().domain([2000, 2014]).range([25, plots.width-45]);
+	var val_scale = d3.scaleLinear().domain([50,220]).range([plots.height-20, 15]);
+	
+	//line chart axis generators
+	var yaxis = d3.axisLeft(val_scale)
+				  .tickValues([75,100,125,150,175])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
 
-		//line generators
-		var index_line_gdp = d3.line().x(function(d){return year_scale(d.year)})
-								      .y(function(d){return val_scale(d.GDPi)});
-		
-		var index_line_co2 = d3.line().x(function(d){return year_scale(d.year)})
-								      .y(function(d){return val_scale(d.CO2i)});
+	var xaxis = d3.axisBottom(year_scale)
+				  .tickValues([2000,2005,2010,2014])
+				  .tickFormat(function(v){
+				  	return v==2000 ? v : "'" + (v+"").substring(2);
+				  })
+				  .tickSize(3)
+				  .tickSizeOuter(0);	
 
-		//axis generators
-		var yaxis = d3.axisLeft(val_scale)
-					  .tickValues([75,100,125,150,175])
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//line generators
+	var index_line_gdp = d3.line().x(function(d){return year_scale(d.year)}).y(function(d){return val_scale(d.GDPi)});
+	var index_line_co2 = d3.line().x(function(d){return year_scale(d.year)}).y(function(d){return val_scale(d.CO2i)});	
 
-		var xaxis = d3.axisBottom(year_scale)
-					  .tickValues([2000,2005,2010,2014])
-					  .tickFormat(function(v){
-					  	return v==2000 ? v : "'" + (v+"").substring(2);
-					  })
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//per capita column chart scales
+	var pc_scale = d3.scaleLinear().domain([0, 128]).range([(plots.height-25), 0]);
+	var pc_year_scale = d3.scaleBand().domain([2000, 2014]).range([20, plots.width-20]).paddingOuter(0.25).paddingInner(0.25);
 
-		//scale - per capita bar chart
-		var pc_scale = d3.scaleLinear().domain([0, 128]).range([(plots.height-25), 0]);
-		var pc_year_scale = d3.scaleBand().domain([2000, 2014]).range([20, plots.width-20])
-											.paddingOuter(0.25)
-											.paddingInner(0.25);
+	//per capita chart axis generators
+	var pc_xaxis =  d3.axisBottom(pc_year_scale)
+				  .tickValues([2000,2014])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
+	
+	var pc_yaxis = d3.axisLeft(pc_scale)
+				  .tickValues([0,20,40,60,80])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
 
-		var pc_xaxis =  d3.axisBottom(pc_year_scale)
-					  .tickValues([2000,2014])
-					  .tickSize(3)
-					  .tickSizeOuter(0);
-		
-		var pc_yaxis = d3.axisLeft(pc_scale)
-					  .tickValues([0,20,40,60,80])
-					  .tickFormat(function(v){return Math.round(v)})
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//fuel source scale (bar chart y-axis)
+	var fuel_scale = d3.scaleBand().domain(["coal", "natgas", "nuclear", "hydro", "windsolar", "other"])
+								 .range([30,plots.height-14])
+								 .paddingInner(0.25)
+								 .paddingOuter(0)
+								 ;	
+	//bar length scale
+	var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
 
-		//scales - fuel mixbar chart
-		var fuel_scale = d3.scaleBand().domain(["coal", "natgas", "nuclear", "hydro", "windsolar", "other"])
-									 .range([30,plots.height-14])
-									 .paddingInner(0.25)
-									 .paddingOuter(0)
-									 ;
+	//colors
+	var colorbrewer = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f'];
+	var cols = {
+		coal:colorbrewer[1], 
+	 	natgas: colorbrewer[5], 
+	 	nuclear:colorbrewer[3], 
+	 	hydro: colorbrewer[0], 
+	 	windsolar: colorbrewer[4], 
+	 	other:colorbrewer[2]
+	}	
+	var fuel_color = function(d){return cols[d]}
 
-		var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
-		var colorbrewer= ['#b3e2cd','#fdcdac','#cbd5e8','#f4cae4','#e6f5c9','#fff2ae'];
-		var colorbrewer = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f'];
-		var fuel_color = function(d){
-			var cols = {
-				coal:colorbrewer[1], 
-			 	natgas: colorbrewer[5], 
-			 	nuclear:colorbrewer[3], 
-			 	hydro: colorbrewer[0], 
-			 	windsolar: colorbrewer[4], 
-			 	other:colorbrewer[2]
-			}
-			return cols[d];
-		}
-		var fuel_color_text = function(d){
-			return d=="windsolar" ? "#666666" : "#ffffff";
-		}
+	//current sort variable
+	var sortkey = "diff";
 
-		//bar stack generator
-		var stack_keys = ["coal", "natgas", "nuclear", "hydro", "windsolar", "other"];
-		var stack = d3.stack().keys(stack_keys).value(function(d, key){return bar_scale(d[key].share)});
+	//number formatting
+	var formats = {
+		diff: format.fn0("pct1"),
+		gdp: format.fn0("pct1"),
+		co2: format.fn0("pct1"),
+		chg: format.fn0("ch1"),
+		pct_chg: format.fn0("pct1"),
+		co2_pc_2014: format.fn0("num1"),
+		share_coal: format.fn0("sh1"),
+		share_natgas: format.fn0("sh1"),
+		share_nuclear: format.fn0("sh1"),
+		share_hydro: format.fn0("sh1"),
+		share_windsolar: format.fn0("sh1")
+	}
 
-		var sortkey = "diff";
-		var formats = {
-			diff: format.fn0("pct1"),
-			gdp: format.fn0("pct1"),
-			co2: format.fn0("pct1"),
-			chg: function(v){return format.fn(v, "ch1")},
-			pct_chg: format.fn0("pct1"),
-			co2_pc_2014: format.fn0("num1"),
-			share_coal: format.fn0("sh1"),
-			share_natgas: format.fn0("sh1"),
-			share_nuclear: format.fn0("sh1"),
-			share_hydro: format.fn0("sh1"),
-			share_windsolar: format.fn0("sh1")
-		}
 
+	//pull in data, draw, and layout
+	d3.json(dir.url("data", "energy_decoupling.json"), function(err,data){
 
 		function draw_plots(){
-			plots.u = svg.selectAll("g.grid-cell").data(data, function(d,i){return d.state});
+			//bind data to plots
+			plots.u = svg.selectAll("g.grid-cell").data(data, function(d,i){return d.state[0]});
 			plots.u.exit().remove();
 			plots.e = plots.u.enter().append("g").classed("grid-cell",true);
 			  var shift = plots.e.append("g").classed("v-shift",true).attr("transform","translate(0,0)");
@@ -197,12 +198,9 @@ function mainfn(){
 
 				  shift.append("g").classed("state-labels",true);
 
-
-
-
-
 			plots.b = plots.e.merge(plots.u).style("visibility","hidden");
 			
+			//propagate data to various layers
 			plots.shift = plots.b.select("g.v-shift");
 			plots.line = plots.shift.select("g.line-plot");
 			plots.line_labels = plots.line.select("g.path-labels");
@@ -210,45 +208,46 @@ function mainfn(){
 			plots.pc = plots.shift.select("g.pc-plot").attr("transform","translate(0,-5)");
 			
 			var stlabels = plots.shift.select("g.state-labels").selectAll("text.state-label").data(function(d,i){
-				var st = d.state == "District of Columbia" ? "D.C." : d.state;
+				var st = d.state[0] == "District of Columbia" ? "D.C." : d.state[0];
 				return [
-						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"],
-						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"]
-					];
+					[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"],
+					[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"]
+				];
 			});
 			var stlabels2 = stlabels.enter().append("text").classed("state-label",true).merge(stlabels)
 			  			.attr("x", "1")
-  						.attr("y", "30")
-  						.attr("text-anchor","start")
-  						.style("font-weight","bold")
-  						.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
-  						.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
-  						.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"})
-  						;
-  			var stlabels3 = stlabels2.selectAll("tspan").data(function(d,i){
-  				return d;
-  			});
-  			stlabels3.enter().append("tspan").merge(stlabels3)
-  						.text(function(d,i){return d+" "})
-  						.style("font-size",function(d,i){
-  							return i==1 ? "15px" : "11px";
-  						});
+						.attr("y", "30")
+						.attr("text-anchor","start")
+						.style("font-weight","bold")
+						.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
+						.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
+						.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"})
+						;
+			var stlabels3 = stlabels2.selectAll("tspan").data(function(d,i){
+				return d;
+			});
+
+			stlabels3.enter().append("tspan").merge(stlabels3)
+					.text(function(d,i){return d+" "})
+					.style("font-size",function(d,i){
+						return i==1 ? "15px" : "11px";
+					});
 			
 			//add y-axis
 			var yg = plots.line.select("g.y-axis");
 			yaxis(yg);
-			yg.selectAll("path").attr("stroke","none");
-			yg.selectAll("line").style("shape-rendering","crispEdges");
-			yg.selectAll("text").attr("fill","#666666");
+				yg.selectAll("path").attr("stroke","none");
+				yg.selectAll("line").style("shape-rendering","crispEdges");
+				yg.selectAll("text").attr("fill","#666666");
 
 			//add x-axis
 			var xg = plots.line.select("g.x-axis");
 			xaxis(xg);
-			xg.selectAll("path").attr("stroke","none");
-			xg.selectAll("line").style("shape-rendering","crispEdges");
-			xg.selectAll("text").attr("fill","#666666");
+				xg.selectAll("path").attr("stroke","none");
+				xg.selectAll("line").style("shape-rendering","crispEdges");
+				xg.selectAll("text").attr("fill","#666666");
 
-			//style axes
+			//add grid lines to line chart (one time only)
 			plots.line.select("g.grid-lines")
 					.selectAll("line")
 					.data(yaxis.tickValues())
@@ -267,38 +266,47 @@ function mainfn(){
 					.attr("stroke-dasharray","2,2")
 					;
 
-
-			plots.line.selectAll("path.trend-line").data(function(d,i){
+			//trend lines and 2014 point value annotations
+			var plotlines = plots.line.selectAll("path.trend-line").data(function(d,i){
 				return [index_line_gdp(d.trend), index_line_co2(d.trend)];
-			}).enter().append("path").classed("trend-line", true).attr("d", function(d,i){return d})
-									 .attr("stroke", function(d,i){
-									 	return i === 0 ? "#0d73d6" : "#dc2a2a";
-									 })
-									 .attr("stroke-dasharray", function(d,i){
-									 	return i === 0 ? "none" : "3,3";
-									 })
-									 .attr("stroke-width","2px")
-									 .attr("fill", "none")
-									 ;
+			})
 
-			var labels = plots.line.selectAll("g.value-label").data(function(d,i){
+			plotlines.enter().append("path").classed("trend-line", true).merge(plotlines)
+				 .attr("d", function(d,i){return d})
+				 .attr("stroke", function(d,i){
+				 	return i === 0 ? "#0d73d6" : "#dc2a2a";
+				 })
+				 .attr("stroke-dasharray", function(d,i){
+				 	return i === 0 ? "none" : "3,3";
+				 })
+				 .attr("stroke-width","2px")
+				 .attr("fill", "none")
+				 ;
+
+			var labels_u = plots.line.selectAll("g.value-label").data(function(d,i){
 				var len = d.trend.length;
 				return [d.trend[len-1], d.trend[len-1]];
-			}).enter().append("g").classed("value-label",true)
-			.attr("transform", function(d,i){
-				return "translate(" + year_scale(d.year) + "," + val_scale(i==0 ? d.GDPi : d.CO2i) + ")";
 			});
 
-			labels.append("circle")
-			  .attr("r",3)
-			  .attr("cx","0")
-			  .attr("cy","0")
-			  .attr("fill", function(d,i){
-			 	return i === 0 ? "#0d73d6" : "#dc2a2a";
-			   })
-			;
+				var labels_enter = labels_u.enter().append("g").classed("value-label",true);
+				labels_enter.append("circle");
+				labels_enter.append("text");
 
-			labels.append("text")
+
+			var labels = labels_enter.merge(labels_u)
+						.attr("transform", function(d,i){
+							return "translate(" + year_scale(d.year) + "," + val_scale(i==0 ? d.GDPi : d.CO2i) + ")";
+						});
+
+			labels.select("circle")
+					.attr("r",3)
+					.attr("cx","0")
+					.attr("cy","0")
+					.attr("fill", function(d,i){
+						return i === 0 ? "#0d73d6" : "#dc2a2a";
+					});
+
+			labels.select("text")
 				  .attr("x",0)
 				  .attr("y",0)
 				  .text(function(d,i){
@@ -316,6 +324,7 @@ function mainfn(){
 				  	}
 				  });
 
+			//add "GDP" and "Emissions" labels
 			var anno = plots.line_labels.style("visibility","hidden").selectAll("text").data(function(d,i){
 				var gdp = d.trend[4];
 				var co2 = sortkey == "co2" ? d.trend[11] : d.trend[9];
@@ -335,11 +344,9 @@ function mainfn(){
 
 
 			//PER CAPITA COLUMN CHARTS
-
-
 			var pcbars = {};
 			pcbars.u = plots.pc.selectAll("g.bars").data(function(d){
-				return [{year:2000, val: d.pc.co2_pc_2000}, {year:2014, val: d.pc.co2_pc_2014}];
+				return [{year:2000, val: d.pc[0].co2_pc_2000}, {year:2014, val: d.pc[0].co2_pc_2014}];
 			});
 			pcbars.e = pcbars.u.enter().append("g").classed("bars",true);
 				pcbars.e.append("rect");
@@ -382,6 +389,7 @@ function mainfn(){
 			pcxg.selectAll("line").style("shape-rendering","crispEdges");
 			pcxg.selectAll("text").attr("fill","#666666");
 
+			//add grid lines (once)
 			plots.pc.select("g.grid-lines")
 					.selectAll("line")
 					.data(pc_yaxis.tickValues())
@@ -401,7 +409,8 @@ function mainfn(){
 					;
 
 
-			var bars = { };
+			//fuel type bar chart
+			var bars = {};
 			bars.u = plots.bar.selectAll("g.bars").data(function(d){
 				return d.fuel.slice(0).sort(function(a,b){
 					var aval = "share_" + a.fuel;
@@ -414,16 +423,15 @@ function mainfn(){
 
 			bars.e = bars.u.enter()
 			  .append("g")
-			  .classed("bars", true)
-			  ;
+			  .classed("bars", true);
+
 			bars.e.append("rect");
-			bars.e.append("text").classed("fuel-type",true);
 			bars.e.append("text").classed("fuel-share",true);
+			
 			bars.b = bars.e.merge(bars.u);
 			bars.b.transition().attr("transform", function(d,i){
 				return "translate(0," + ((i*19)+45) + ")"; 
 			})
-
 
 			bars.b.select("rect")
 				.attr("height",14)
@@ -433,7 +441,6 @@ function mainfn(){
 				.attr("fill",function(d,i){return fuel_color(d.fuel)})
 				;
 
-
 			bars.b.select("text.fuel-share")
 				.text(function(d,i){return d.fuel_type + ": " + format.fn(d.share, "sh1")})
 				.style("font-size","11px")
@@ -442,25 +449,13 @@ function mainfn(){
 					return 2; 
 				})
 				.attr("y","11")
-		}
-
-		var control = d3.select("#energy-decoupling-control")
-				.style("width", "350px")
-				.style("margin","0px auto")
-				.style("padding","0em")
-				.style("z-index",10)
-				;
+		}		
 		
-		var control_inner = control.append("div").classed("c-fix",true)
-								   .style("padding","1em 20px")
-								   .style("border","2px solid #fafafa")
-								   .style("border-width","0px 0px 2px 2px")
-								   .style("background-color","#ececec")
-								   .style("margin","0em 20px 0em -20px")
-								   ;
 
+		//HANDLE LAYOUT
 		var resize_timer;
 		var firstlayout = true;
+		var ordering = {}; //store previous ordering
 		function lay_it_out(){
 
 			//width of 5 grid columns or whatever is available in wrap
@@ -468,17 +463,18 @@ function mainfn(){
 			var fivecols = 5*plots.width;
 			
 			//account for 42px of padding/borders on graphic_wrap which uses border-box sizing
-			var width = (fivecols + 42) < max_width ? fivecols : max_width-42;  
+			var width = (fivecols + 42) <= max_width ? fivecols : max_width-42;  
 			
 			//set the available width for grid
-			grid.set_width(width);
-
-			//the actual width of the grid + 42px for padding/borders
-			var gw_width = grid.get_width() + 42;	
+			grid.set_width(width);	
 
 			svg.style("width",grid.get_width()+"px");
 			svg.style("height", grid.get_height()+"px");
 
+			//the exact width of the grid + 42px for padding/borders
+			var gw_width = grid.get_width() + 42;
+			
+			//available space for control menu
 			var extra = max_width - gw_width;
 			
 			if(extra > 350){
@@ -514,18 +510,41 @@ function mainfn(){
 				})
 			}
 
+			show_menu.on("mouseenter", function(d,i){
+				three_lines.attr("fill","#666666");
+			});
+
+			show_menu.on("mouseleave", function(d,i){
+				three_lines.attr("fill","#333333");
+			});
+
+			//delay function for grid layout transitions
+			function delay(d,i){
+				try{
+					var D = ordering[d.state[0]]*30;
+				}
+				catch(e){
+					var D = 0;
+				}
+				finally{
+					return firstlayout ? 0 : D;
+				}
+			}
+
 			clearTimeout(resize_timer);
 			resize_timer = setTimeout(function(){
-				plots.b.transition().duration(firstlayout ? 0 : 1300).delay(0).attr("transform", function(d,i){
+				plots.b.transition().duration(firstlayout ? 0 : 1300).delay(delay).attr("transform", function(d,i){
 					var xy = grid.layout(i);
 					return "translate(" + xy.x + "," + xy.y + ")"
 				}).on("start", function(d,i){
 					var thiz = d3.select(this);
 					var xy = grid.layout(i);
+
+					//selectively show/hide labels based on placement in the grid
 					thiz.selectAll("g.y-axis").style("visibility", xy.col==0 ? "visible" : "hidden");
 					thiz.selectAll("g.line-plot g.x-axis").style("visibility", xy.row%3==0 ? "visible" : "hidden");
 					thiz.selectAll("g.path-labels").style("visibility", xy.row==0 && xy.col==0 ? "visible" : "hidden");
-					thiz.select("g.v-shift").transition().attr("transform","translate(0," + (xy.row%3 != 0 && sortkey in {co2:1, gdp:1, diff:1} ? "15)" : "0)"));
+					thiz.selectAll("g.v-shift").attr("transform","translate(0," + (xy.row%3 != 0 && sortkey in {co2:1, gdp:1, diff:1} ? "15)" : "0)"));
 				})
 				firstlayout = false;
 			}, firstlayout ? 0 : 150);
@@ -577,11 +596,21 @@ function mainfn(){
 			share_windsolar: ["Share of 2014 net electricity generation by fuel type", "Sorted by share from wind and solar"]
 		}
 
-
-
+		//sort the data, draw the plots, lay out the grid 
 		function sort_and_draw(key){
 			try{
 				sortkey = key;
+				
+				try{
+					data.forEach(function(d,i,a){
+						ordering[d.state[0]] = i;
+					});
+				}
+				catch(e){
+					//no-op
+				}	
+
+				//sort the data array (sort descending by default)
 				data.sort(function(a,b){
 					var aval = a.sort[0][key];
 					var bval = b.sort[0][key];
@@ -594,9 +623,13 @@ function mainfn(){
 					}
 				});
 
+				//draw_plots binds the sorted data
 				draw_plots();
+				
+				//after redrawing plots, lay out the grid
 				lay_it_out();
 
+				//selectively show plots based on what is selected
 				if(sortkey in {diff:1, co2:1, gdp:1}){
 					//hide
 					plots.bar.transition().duration(300).style("opacity",0).on("end", function(){plots.bar.style("display","none")})
@@ -628,7 +661,7 @@ function mainfn(){
 				plots.b.style("visibility","visible");	
 			}
 			catch(e){
-				plots.b.style("visibility","hidden");	
+				plots.b.style("visibility","hidden");
 			}		
 		}
 
@@ -638,14 +671,16 @@ function mainfn(){
 			d3.select(this).classed("selected",true);
 		});
 
+		//default draw is by "diff"
 		sort_and_draw("diff");
 		
+		//lay out grid (fn contains a timer to avoid re-layout on every resize event)
 		window.addEventListener("resize", lay_it_out)
-
-
 	});
 }
 
+
+//on load, kick off the app
 document.addEventListener("DOMContentLoaded", function(){
 	mainfn();
 });

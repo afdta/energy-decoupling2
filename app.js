@@ -11,139 +11,6 @@ Pi.prototype.transition=Qy;var Ky=[null],tg=function(t,n){var e,r,i=t.__transiti
 (function () {
 'use strict';
 
-//v1.0 developed for congressional district poverty
-
-//All data for each build/view must be tightly coupled.
-//E.g. if data is fetched asynchronously, you must take measures to ensure that any additional data used at the time of
-//callback execution is tightly coupled -- e.g. if you set some data, A, with set_data (synchronously), then you execute
-//card.json(B) and the card build function relies on both A and B, there's no guarantee that data A will be relevant to 
-//data B if the UI is such that the user is able to execute set_data() again or execute card.json() again while they
-//are waiting for the first card.json result to return. 
-
-//the appropriate data can be bound together in a callback passed to card.json(). until a build queuing/data coupling 
-//scheme is implemented, this is the safest way to use the Card class
-
-//responsiveness at the card level is currently disabled until further edits to the API are made. specifically, the above
-//issues need to be taken into consideration and safeguards need to be implemented to prevent browser resize events calling
-//build when no data exists yet (or the wrong data exists, per above).
-
-//v1.0 developed for congressional district poverty
-
-//state select menu
-
-var state_select = {};
-
-state_select.setup = function(container){
-	var states = [{"STATE":"01","STUSAB":"AL","STATE_NAME":"Alabama","STATENS":"01779775"},{"STATE":"02","STUSAB":"AK","STATE_NAME":"Alaska","STATENS":"01785533"},{"STATE":"04","STUSAB":"AZ","STATE_NAME":"Arizona","STATENS":"01779777"},{"STATE":"05","STUSAB":"AR","STATE_NAME":"Arkansas","STATENS":"00068085"},{"STATE":"06","STUSAB":"CA","STATE_NAME":"California","STATENS":"01779778"},{"STATE":"08","STUSAB":"CO","STATE_NAME":"Colorado","STATENS":"01779779"},{"STATE":"09","STUSAB":"CT","STATE_NAME":"Connecticut","STATENS":"01779780"},{"STATE":"10","STUSAB":"DE","STATE_NAME":"Delaware","STATENS":"01779781"},{"STATE":"11","STUSAB":"DC","STATE_NAME":"District of Columbia","STATENS":"01702382"},{"STATE":"12","STUSAB":"FL","STATE_NAME":"Florida","STATENS":"00294478"},{"STATE":"13","STUSAB":"GA","STATE_NAME":"Georgia","STATENS":"01705317"},{"STATE":"15","STUSAB":"HI","STATE_NAME":"Hawaii","STATENS":"01779782"},{"STATE":"16","STUSAB":"ID","STATE_NAME":"Idaho","STATENS":"01779783"},{"STATE":"17","STUSAB":"IL","STATE_NAME":"Illinois","STATENS":"01779784"},{"STATE":"18","STUSAB":"IN","STATE_NAME":"Indiana","STATENS":"00448508"},{"STATE":"19","STUSAB":"IA","STATE_NAME":"Iowa","STATENS":"01779785"},{"STATE":"20","STUSAB":"KS","STATE_NAME":"Kansas","STATENS":"00481813"},{"STATE":"21","STUSAB":"KY","STATE_NAME":"Kentucky","STATENS":"01779786"},{"STATE":"22","STUSAB":"LA","STATE_NAME":"Louisiana","STATENS":"01629543"},{"STATE":"23","STUSAB":"ME","STATE_NAME":"Maine","STATENS":"01779787"},{"STATE":"24","STUSAB":"MD","STATE_NAME":"Maryland","STATENS":"01714934"},{"STATE":"25","STUSAB":"MA","STATE_NAME":"Massachusetts","STATENS":"00606926"},{"STATE":"26","STUSAB":"MI","STATE_NAME":"Michigan","STATENS":"01779789"},{"STATE":"27","STUSAB":"MN","STATE_NAME":"Minnesota","STATENS":"00662849"},{"STATE":"28","STUSAB":"MS","STATE_NAME":"Mississippi","STATENS":"01779790"},{"STATE":"29","STUSAB":"MO","STATE_NAME":"Missouri","STATENS":"01779791"},{"STATE":"30","STUSAB":"MT","STATE_NAME":"Montana","STATENS":"00767982"},{"STATE":"31","STUSAB":"NE","STATE_NAME":"Nebraska","STATENS":"01779792"},{"STATE":"32","STUSAB":"NV","STATE_NAME":"Nevada","STATENS":"01779793"},{"STATE":"33","STUSAB":"NH","STATE_NAME":"New Hampshire","STATENS":"01779794"},{"STATE":"34","STUSAB":"NJ","STATE_NAME":"New Jersey","STATENS":"01779795"},{"STATE":"35","STUSAB":"NM","STATE_NAME":"New Mexico","STATENS":"00897535"},{"STATE":"36","STUSAB":"NY","STATE_NAME":"New York","STATENS":"01779796"},{"STATE":"37","STUSAB":"NC","STATE_NAME":"North Carolina","STATENS":"01027616"},{"STATE":"38","STUSAB":"ND","STATE_NAME":"North Dakota","STATENS":"01779797"},{"STATE":"39","STUSAB":"OH","STATE_NAME":"Ohio","STATENS":"01085497"},{"STATE":"40","STUSAB":"OK","STATE_NAME":"Oklahoma","STATENS":"01102857"},{"STATE":"41","STUSAB":"OR","STATE_NAME":"Oregon","STATENS":"01155107"},{"STATE":"42","STUSAB":"PA","STATE_NAME":"Pennsylvania","STATENS":"01779798"},{"STATE":"44","STUSAB":"RI","STATE_NAME":"Rhode Island","STATENS":"01219835"},{"STATE":"45","STUSAB":"SC","STATE_NAME":"South Carolina","STATENS":"01779799"},{"STATE":"46","STUSAB":"SD","STATE_NAME":"South Dakota","STATENS":"01785534"},{"STATE":"47","STUSAB":"TN","STATE_NAME":"Tennessee","STATENS":"01325873"},{"STATE":"48","STUSAB":"TX","STATE_NAME":"Texas","STATENS":"01779801"},{"STATE":"49","STUSAB":"UT","STATE_NAME":"Utah","STATENS":"01455989"},{"STATE":"50","STUSAB":"VT","STATE_NAME":"Vermont","STATENS":"01779802"},{"STATE":"51","STUSAB":"VA","STATE_NAME":"Virginia","STATENS":"01779803"},{"STATE":"53","STUSAB":"WA","STATE_NAME":"Washington","STATENS":"01779804"},{"STATE":"54","STUSAB":"WV","STATE_NAME":"West Virginia","STATENS":"01779805"},{"STATE":"55","STUSAB":"WI","STATE_NAME":"Wisconsin","STATENS":"01779806"},{"STATE":"56","STUSAB":"WY","STATE_NAME":"Wyoming","STATENS":"01779807"},{"STATE":"60","STUSAB":"AS","STATE_NAME":"American Samoa","STATENS":"01802701"},{"STATE":"66","STUSAB":"GU","STATE_NAME":"Guam","STATENS":"01802705"},{"STATE":"69","STUSAB":"MP","STATE_NAME":"Northern Mariana Islands","STATENS":"01779809"},{"STATE":"72","STUSAB":"PR","STATE_NAME":"Puerto Rico","STATENS":"01779808"},{"STATE":"74","STUSAB":"UM","STATE_NAME":"U.S. Minor Outlying Islands","STATENS":"01878752"},{"STATE":"78","STUSAB":"VI","STATE_NAME":"U.S. Virgin Islands","STATENS":"01802710"}];
-
-	var state_lookup = {};
-	for(var i=0; i<states.length; i++){
-		state_lookup[states[i].STATE] = states[i];
-	}
-
-
-	var wrap = d3.select(container);
-		wrap.selectAll("*").remove(); //there's no updating here
-
-	var instruction = wrap.append("p").html("<em>Select a state</em>: ")
-									  .style("display","inline-block")
-									  .style("margin","0px 7px 0px 0px")
-									  .style("line-height","1.65em")
-									  .style("font-size","1em")
-									  .style("padding","2px 0px 2px 0px");
-
-	var select = wrap.append("select").style("display","inline-block")
-									  .style("margin","0px 0px 0px 0px")
-									  .style("line-height","1.65em")
-									  .style("font-size","1em")
-									  .style("padding","2px 5px 2px 5px")
-									  .style("background","transparent")
-									  .style("outline","none");
-
-	this.node = select.node();
-
-	var options = select.selectAll("option").data(states.filter(function(d,i,a){
-		var fips = +d.STATE;
-		return fips <= 56;
-	})).enter().append("option");
-		options.attr("value", function(d,i){return d.STATE})
-			   .text(function(d,i){return d.STATE_NAME});
-
-	var t = function(s){
-		return {fips: s.STATE, abbr: s.STUSAB, name:s.STATE_NAME};
-	};
-
-	select.on("change", function(d,i){
-		var val = this.value;
-		try{
-			var s = states[this.selectedIndex];
-
-			if(s.STATE===val){
-				var r = t(s);
-			}
-			else{
-				throw "ERROR";
-			}
-			
-		}
-		catch(e){
-			var r = {fips: val, abbr: null, name:null};
-		}
-
-		if(!!state_select.onchg){
-			state_select.onchg(r);
-		}
-	});
-
-	return states.map(t);
-};
-
-//update the state selection, but don't trigger change event
-state_select.update = function(val){
-	if(this.node){
-		this.node.value = val;
-	}
-};
-
-state_select.onchange = function(callback){
-	state_select.onchg = callback;
-};
-
-//v1.0 developed for congressional district poverty
-//enable browser history
-
-function history(){
-	var H = {};
-	if(window.history && window.history.pushState){
-		H.push = function(d, u, overwrite){
-			var url = !!u ? u : null; 
-			if(!!overwrite){
-				window.history.replaceState(d, null, url);
-			}
-			else{
-				window.history.pushState(d, null, url);
-			}
-		};
-
-		H.pop = function(callback){
-			var fn = function(event){
-				callback.call(event, event.state);
-			};
-			window.addEventListener("popstate", fn);
-		};
-	}
-	else{
-		H.push = function(){};
-		H.pop = function(){};
-	}
-
-	H.get_hash = function(){
-		return window.location.hash.slice(1);
-	};
-
-	return H;
-}
-
 //directory
 
 var dir = {
@@ -370,167 +237,170 @@ format.fn0 = function(fmt){
 	}
 };
 
-//gig economy interactive - oct 2016
-
 dir.local();
 dir.add("data");
 
 function mainfn(){
-	var state = history();
-	var url = dir.url("data", "energy_decoupling.json");
-	
+	//outer graphics wrapper -- used to determine available width for graphic	
 	var wrap = d3.select("#energy-decoupling")
 					.style("max-width","1600px")
 					.style("margin","0px auto")
 					.style("position","relative");
 	
+	//main graphic wrapper
+	var graphic_wrap = d3.select("#energy-decoupling-graphic")
+						 .style("margin","0px auto")
+						 .style("position","relative")
+						 .style("z-index","5")
+						 .style("padding","0em 20px")
+						 .style("border","0px solid #dddddd")
+						 .style("min-width","350px");
 
-	d3.json(url, function(err,dat){
-		var data = [];
-		for(var p in dat.trends){
-			if(dat.trends.hasOwnProperty(p)){
-				data.push({trend: dat.trends[p], 
-						   fuel: dat.fuel[p], 
-						   sort: dat.sort[p],
-						   pc: dat.percap[p][0],
-						   state:dat.trends[p][0].state==dat.fuel[p][0].state ? dat.trends[p][0].state : "Error"});
-			}
-		}
+	//control panel
+	var control = graphic_wrap.append("div")
+			.classed("makesans disable-highlight", true)
+			.style("width", "350px")
+			.style("margin","0px auto")
+			.style("padding","0em")
+			.style("z-index",10);
+	
+	var control_inner = control
+		   .append("div")
+		   .classed("c-fix",true)
+		   .style("padding","1em 20px")
+		   .style("border","2px solid #fafafa")
+		   .style("border-width","0px 0px 2px 2px")
+		   .style("background-color","#ececec")
+		   .style("margin","0em 20px 0em -20px");
 
-		var graphic_wrap = d3.select("#energy-decoupling-graphic")
-							 .style("margin","0px auto")
-							 .style("position","relative")
-							 .style("z-index","5")
-							 .style("padding","0em 20px")
-							 .style("border","0px solid #dddddd")
-							 .style("min-width","350px");
+	//plot container
+	var svg_wrap = graphic_wrap.append("div").style("float","left");
+	
+	//title area	
+	var title_wrap = svg_wrap.append("div").style("padding-right","50px");
+	
+	//menu show button
+	var show_menu = title_wrap.append("div")
+							.style("position","absolute")
+							.style("top","1em")
+							.style("right","20px")
+							.style("width","40px")
+							.style("height","40px")
+							.style("display","none")
+							.style("cursor","pointer");
 
-		var svg_wrap = graphic_wrap.append("div")
-									.style("float","left")
-									.style("border-left","0px solid #dddddd");
-		
-		var title_wrap = svg_wrap.append("div").style("padding-right","50px");
-		var show_menu = title_wrap.append("div").style("position","absolute")
-												.style("top","1em")
-												.style("right","20px")
-												.style("width","40px")
-												.style("height","40px")
-												.style("display","none")
-												.style("cursor","pointer");
+	var three_lines = show_menu.append("svg").append("g").selectAll("rect")
+							.data([1,2,3]).enter().append("rect")
+							.attr("x",0)
+							.attr("y",function(d,i){
+								return (i*9)+5;
+							})
+							.attr("width","40px")
+							.attr("height","4px")
+							.attr("fill","#333333");
 
-		var three_lines = show_menu.append("svg")
-									.selectAll("rect").data([1,2,3]).enter().append("rect")
-									.attr("x",0)
-									.attr("y",function(d,i){
-										return (i*9)+5;
-									})
-									.attr("width","40px")
-									.attr("height","4px")
-									.attr("fill","#333333");
-
-		var graphic_title = title_wrap.append("p");
-		var graphic_subtitle = title_wrap.append("p").style("font-weight","normal");	
+	//title text
+	var graphic_title = title_wrap.append("p");
+	var graphic_subtitle = title_wrap.append("p").style("font-weight","normal");	
 		title_wrap.selectAll("p").style("padding", function(d,i){return i==0 ? "1em 0em 0.25em 1em" : "0em 0em 1.3em 1em"})
-								.style("margin","0em 0em 0em 0em")
-								.style("font-weight",function(d,i){return i==0 ? "bold" : "normal"})
-								.text("Chart title");
+				.style("margin","0em 0em 0em 0em")
+				.style("font-weight",function(d,i){return i==0 ? "bold" : "normal"})
+				.text("");
 
-		var svg = svg_wrap.append("svg").style("width","100%");
-		
+	//svg
+	var svg = svg_wrap.append("svg").style("width","100%");
 
-		var plots = {width:190, height:170};
+	//plot parameters
+	var plots = {width:190, height:170};
 
-		var grid = grid_layout().cell_dims(plots.width, plots.height).ncells(51).padding(5,5,5,15);
+	//grid layout object
+	var grid = grid_layout().cell_dims(plots.width, plots.height).ncells(51).padding(5,5,5,15);
 
-		//scales - line chart
-		var year_scale = d3.scaleLinear().domain([2000, 2014]).range([25, plots.width-45]);
-		var val_scale = d3.scaleLinear().domain([50,220]).range([plots.height-20, 15]);
-		
+	///////////////////////////////scales and axis generators
+	//line chart scales
+	var year_scale = d3.scaleLinear().domain([2000, 2014]).range([25, plots.width-45]);
+	var val_scale = d3.scaleLinear().domain([50,220]).range([plots.height-20, 15]);
+	
+	//line chart axis generators
+	var yaxis = d3.axisLeft(val_scale)
+				  .tickValues([75,100,125,150,175])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
 
-		//line generators
-		var index_line_gdp = d3.line().x(function(d){return year_scale(d.year)})
-								      .y(function(d){return val_scale(d.GDPi)});
-		
-		var index_line_co2 = d3.line().x(function(d){return year_scale(d.year)})
-								      .y(function(d){return val_scale(d.CO2i)});
+	var xaxis = d3.axisBottom(year_scale)
+				  .tickValues([2000,2005,2010,2014])
+				  .tickFormat(function(v){
+				  	return v==2000 ? v : "'" + (v+"").substring(2);
+				  })
+				  .tickSize(3)
+				  .tickSizeOuter(0);	
 
-		//axis generators
-		var yaxis = d3.axisLeft(val_scale)
-					  .tickValues([75,100,125,150,175])
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//line generators
+	var index_line_gdp = d3.line().x(function(d){return year_scale(d.year)}).y(function(d){return val_scale(d.GDPi)});
+	var index_line_co2 = d3.line().x(function(d){return year_scale(d.year)}).y(function(d){return val_scale(d.CO2i)});	
 
-		var xaxis = d3.axisBottom(year_scale)
-					  .tickValues([2000,2005,2010,2014])
-					  .tickFormat(function(v){
-					  	return v==2000 ? v : "'" + (v+"").substring(2);
-					  })
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//per capita column chart scales
+	var pc_scale = d3.scaleLinear().domain([0, 128]).range([(plots.height-25), 0]);
+	var pc_year_scale = d3.scaleBand().domain([2000, 2014]).range([20, plots.width-20]).paddingOuter(0.25).paddingInner(0.25);
 
-		//scale - per capita bar chart
-		var pc_scale = d3.scaleLinear().domain([0, 128]).range([(plots.height-25), 0]);
-		var pc_year_scale = d3.scaleBand().domain([2000, 2014]).range([20, plots.width-20])
-											.paddingOuter(0.25)
-											.paddingInner(0.25);
+	//per capita chart axis generators
+	var pc_xaxis =  d3.axisBottom(pc_year_scale)
+				  .tickValues([2000,2014])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
+	
+	var pc_yaxis = d3.axisLeft(pc_scale)
+				  .tickValues([0,20,40,60,80])
+				  .tickSize(3)
+				  .tickSizeOuter(0);
 
-		var pc_xaxis =  d3.axisBottom(pc_year_scale)
-					  .tickValues([2000,2014])
-					  .tickSize(3)
-					  .tickSizeOuter(0);
-		
-		var pc_yaxis = d3.axisLeft(pc_scale)
-					  .tickValues([0,20,40,60,80])
-					  .tickFormat(function(v){return Math.round(v)})
-					  .tickSize(3)
-					  .tickSizeOuter(0);
+	//fuel source scale (bar chart y-axis)
+	var fuel_scale = d3.scaleBand().domain(["coal", "natgas", "nuclear", "hydro", "windsolar", "other"])
+								 .range([30,plots.height-14])
+								 .paddingInner(0.25)
+								 .paddingOuter(0);	
+	//bar length scale
+	var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
 
-		//scales - fuel mixbar chart
-		var fuel_scale = d3.scaleBand().domain(["coal", "natgas", "nuclear", "hydro", "windsolar", "other"])
-									 .range([30,plots.height-14])
-									 .paddingInner(0.25)
-									 .paddingOuter(0);
+	//colors
+	var colorbrewer = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f'];
+	var cols = {
+		coal:colorbrewer[1], 
+	 	natgas: colorbrewer[5], 
+	 	nuclear:colorbrewer[3], 
+	 	hydro: colorbrewer[0], 
+	 	windsolar: colorbrewer[4], 
+	 	other:colorbrewer[2]
+	};	
+	var fuel_color = function(d){return cols[d]};
 
-		var bar_scale = d3.scaleLinear().domain([0,1]).range([0,plots.width-20]);
-		var colorbrewer= ['#b3e2cd','#fdcdac','#cbd5e8','#f4cae4','#e6f5c9','#fff2ae'];
-		var colorbrewer = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f'];
-		var fuel_color = function(d){
-			var cols = {
-				coal:colorbrewer[1], 
-			 	natgas: colorbrewer[5], 
-			 	nuclear:colorbrewer[3], 
-			 	hydro: colorbrewer[0], 
-			 	windsolar: colorbrewer[4], 
-			 	other:colorbrewer[2]
-			};
-			return cols[d];
-		};
-		var fuel_color_text = function(d){
-			return d=="windsolar" ? "#666666" : "#ffffff";
-		};
+	//current sort variable
+	var sortkey = "diff";
 
-		//bar stack generator
-		var stack_keys = ["coal", "natgas", "nuclear", "hydro", "windsolar", "other"];
-		var stack = d3.stack().keys(stack_keys).value(function(d, key){return bar_scale(d[key].share)});
+	//number formatting
+	var formats = {
+		diff: format.fn0("pct1"),
+		gdp: format.fn0("pct1"),
+		co2: format.fn0("pct1"),
+		chg: format.fn0("ch1"),
+		pct_chg: format.fn0("pct1"),
+		co2_pc_2014: format.fn0("num1"),
+		share_coal: format.fn0("sh1"),
+		share_natgas: format.fn0("sh1"),
+		share_nuclear: format.fn0("sh1"),
+		share_hydro: format.fn0("sh1"),
+		share_windsolar: format.fn0("sh1")
+	};
 
-		var sortkey = "diff";
-		var formats = {
-			diff: format.fn0("pct1"),
-			gdp: format.fn0("pct1"),
-			co2: format.fn0("pct1"),
-			chg: function(v){return format.fn(v, "ch1")},
-			pct_chg: format.fn0("pct1"),
-			co2_pc_2014: format.fn0("num1"),
-			share_coal: format.fn0("sh1"),
-			share_natgas: format.fn0("sh1"),
-			share_nuclear: format.fn0("sh1"),
-			share_hydro: format.fn0("sh1"),
-			share_windsolar: format.fn0("sh1")
-		};
+
+	//pull in data, draw, and layout
+	d3.json(dir.url("data", "energy_decoupling.json"), function(err,data){
+
+
 
 
 		function draw_plots(){
-			plots.u = svg.selectAll("g.grid-cell").data(data, function(d,i){return d.state});
+			plots.u = svg.selectAll("g.grid-cell").data(data, function(d,i){return d.state[0]});
 			plots.u.exit().remove();
 			plots.e = plots.u.enter().append("g").classed("grid-cell",true);
 			  var shift = plots.e.append("g").classed("v-shift",true).attr("transform","translate(0,0)");
@@ -570,28 +440,28 @@ function mainfn(){
 			plots.pc = plots.shift.select("g.pc-plot").attr("transform","translate(0,-5)");
 			
 			var stlabels = plots.shift.select("g.state-labels").selectAll("text.state-label").data(function(d,i){
-				var st = d.state == "District of Columbia" ? "D.C." : d.state;
+				var st = d.state[0] == "District of Columbia" ? "D.C." : d.state[0];
 				return [
-						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"],
-						[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"]
-					];
+					[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"],
+					[i+1, st, "("+formats[sortkey](d.sort[0][sortkey])+")"]
+				];
 			});
 			var stlabels2 = stlabels.enter().append("text").classed("state-label",true).merge(stlabels)
 			  			.attr("x", "1")
-  						.attr("y", "30")
-  						.attr("text-anchor","start")
-  						.style("font-weight","bold")
-  						.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
-  						.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
-  						.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"});
-  			var stlabels3 = stlabels2.selectAll("tspan").data(function(d,i){
-  				return d;
-  			});
-  			stlabels3.enter().append("tspan").merge(stlabels3)
-  						.text(function(d,i){return d+" "})
-  						.style("font-size",function(d,i){
-  							return i==1 ? "15px" : "11px";
-  						});
+							.attr("y", "30")
+							.attr("text-anchor","start")
+							.style("font-weight","bold")
+							.attr("stroke", function(d,i){return i==0 ? "#ffffff" : "none"})
+							.attr("fill", function(d,i){return i==0 ? "#ffffff" : "#111111"})
+							.attr("stroke-width", function(d,i){return i==0 ? "3" : "0"});
+				var stlabels3 = stlabels2.selectAll("tspan").data(function(d,i){
+					return d;
+				});
+				stlabels3.enter().append("tspan").merge(stlabels3)
+							.text(function(d,i){return d+" "})
+							.style("font-size",function(d,i){
+								return i==1 ? "15px" : "11px";
+							});
 			
 			//add y-axis
 			var yg = plots.line.select("g.y-axis");
@@ -698,7 +568,7 @@ function mainfn(){
 
 			var pcbars = {};
 			pcbars.u = plots.pc.selectAll("g.bars").data(function(d){
-				return [{year:2000, val: d.pc.co2_pc_2000}, {year:2014, val: d.pc.co2_pc_2014}];
+				return [{year:2000, val: d.pc[0].co2_pc_2000}, {year:2014, val: d.pc[0].co2_pc_2014}];
 			});
 			pcbars.e = pcbars.u.enter().append("g").classed("bars",true);
 				pcbars.e.append("rect");
@@ -801,23 +671,13 @@ function mainfn(){
 					return 2; 
 				})
 				.attr("y","11");
-		}
-
-		var control = d3.select("#energy-decoupling-control")
-				.style("width", "350px")
-				.style("margin","0px auto")
-				.style("padding","0em")
-				.style("z-index",10);
+		}		
 		
-		var control_inner = control.append("div").classed("c-fix",true)
-								   .style("padding","1em 20px")
-								   .style("border","2px solid #fafafa")
-								   .style("border-width","0px 0px 2px 2px")
-								   .style("background-color","#ececec")
-								   .style("margin","0em 20px 0em -20px");
 
+		//HANDLE LAYOUT
 		var resize_timer;
 		var firstlayout = true;
+		var ordering = {};
 		function lay_it_out(){
 
 			//width of 5 grid columns or whatever is available in wrap
@@ -871,9 +731,31 @@ function mainfn(){
 				});
 			}
 
+			show_menu.on("mouseenter", function(d,i){
+				three_lines.attr("fill","#666666");
+			});
+
+			show_menu.on("mouseleave", function(d,i){
+				three_lines.attr("fill","#333333");
+			});
+
+			
+
+			function delay(d,i){
+				try{
+					var D = ordering[d.state[0]]*30;
+				}
+				catch(e){
+					var D = 0;
+				}
+				finally{
+					return firstlayout ? 0 : D;
+				}
+			}
+
 			clearTimeout(resize_timer);
 			resize_timer = setTimeout(function(){
-				plots.b.transition().duration(firstlayout ? 0 : 1300).delay(0).attr("transform", function(d,i){
+				plots.b.transition().duration(firstlayout ? 0 : 1300).delay(delay).attr("transform", function(d,i){
 					var xy = grid.layout(i);
 					return "translate(" + xy.x + "," + xy.y + ")"
 				}).on("start", function(d,i){
@@ -882,7 +764,7 @@ function mainfn(){
 					thiz.selectAll("g.y-axis").style("visibility", xy.col==0 ? "visible" : "hidden");
 					thiz.selectAll("g.line-plot g.x-axis").style("visibility", xy.row%3==0 ? "visible" : "hidden");
 					thiz.selectAll("g.path-labels").style("visibility", xy.row==0 && xy.col==0 ? "visible" : "hidden");
-					thiz.select("g.v-shift").transition().attr("transform","translate(0," + (xy.row%3 != 0 && sortkey in {co2:1, gdp:1, diff:1} ? "15)" : "0)"));
+					thiz.select("g.v-shift").attr("transform","translate(0," + (xy.row%3 != 0 && sortkey in {co2:1, gdp:1, diff:1} ? "15)" : "0)"));
 				});
 				firstlayout = false;
 			}, firstlayout ? 0 : 150);
@@ -939,6 +821,17 @@ function mainfn(){
 		function sort_and_draw(key){
 			try{
 				sortkey = key;
+				
+				try{
+					data.forEach(function(d,i,a){
+						ordering[d.state[0]] = i;
+					});
+				}
+				catch(e){
+					//no-op
+				}	
+
+
 				data.sort(function(a,b){
 					var aval = a.sort[0][key];
 					var bval = b.sort[0][key];
@@ -985,7 +878,8 @@ function mainfn(){
 				plots.b.style("visibility","visible");	
 			}
 			catch(e){
-				plots.b.style("visibility","hidden");	
+				console.log(e);
+				plots.b.style("visibility","hidden");
 			}		
 		}
 

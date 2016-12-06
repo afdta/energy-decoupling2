@@ -105,7 +105,19 @@ sp3 <- merge(sp1, sp2, by="state")
 sp4 <- merge(sp3, pc[c("state", "co2_pc_2000", "co2_pc_2014", "chg", "pct_chg")], by="state")
 sp <- split(sp4, sp4$stabbr)
 
-j <- toJSON(list(trends=l, fuel=l2, sort=sp, percap=pc_final))
+st51 <- states[as.numeric(states$stfips) <= 56, ]
+final <- lapply(split(st51, st51$stabbr), function(e){
+  s <- e[1,"stabbr"]
+  n <- e[1,"state"]
+  cat(s)
+  cat(" | ")
+  cat(n)
+  cat("\n")
+  return(list(trend=l[[s]], fuel=l2[[s]], sort=sp[[s]], pc=pc_final[[s]], state=n))
+})
+final <- unname(final)
+
+j <- toJSON(final)
 
 writeLines(j, "/home/alec/Projects/Brookings/energy-decoupling/data/energy_decoupling.json")
 
