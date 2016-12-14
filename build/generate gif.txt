@@ -1,0 +1,8 @@
+#ffmpeg seems to produce higher quality, smaller sized gifs from videos (relative to imagemagick)
+#these commands worked very well for the energy decoupling graphic
+
+#generate a palette
+ffmpeg -y -i /home/alec/Videos/SCREENCAST_00000.avi -vf palettegen palette.png
+
+#use the palette to convert the video to a gif
+ffmpeg -y -i /home/alec/Videos/SCREENCAST_00000.avi -i palette.png -filter_complex paletteuse -r 10 decoupling.gif
