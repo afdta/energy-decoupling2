@@ -237,8 +237,12 @@ format.fn0 = function(fmt){
 	}
 };
 
+//local use
 dir.local();
 dir.add("data");
+
+//rackspace
+//dir.add("data", "energy-decoupling/data");
 
 function mainfn(){
 	//outer graphics wrapper -- used to determine available width for graphic	

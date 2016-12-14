@@ -3,8 +3,12 @@ import grid_layout from '../../js-modules/grid-layout.js';
 import dimensions from '../../js-modules/dimensions.js';
 import format from '../../js-modules/formats.js';
 
+//local use
 dir.local();
 dir.add("data");
+
+//rackspace
+//dir.add("data", "energy-decoupling/data");
 
 function mainfn(){
 	//outer graphics wrapper -- used to determine available width for graphic	
